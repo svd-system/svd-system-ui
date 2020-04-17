@@ -1,16 +1,20 @@
+import MainLayout from '../layouts/MainLayout';
+import Index from '../pages/Index';
+import Error404 from '../pages/Error404';
+
 const routes = [
   {
-    path: "/",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/Index.vue") }]
-  }
+    path: '/',
+    component: MainLayout,
+    children: [{ path: '', component: Index }],
+  },
 ];
 
 // Always leave this as last one
-if (process.env.MODE !== "ssr") {
+if (process.env.MODE !== 'ssr') {
   routes.push({
-    path: "*",
-    component: () => import("pages/Error404.vue")
+    path: '*',
+    component: Error404,
   });
 }
 

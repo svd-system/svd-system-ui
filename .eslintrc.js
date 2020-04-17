@@ -32,7 +32,6 @@ module.exports = {
     // https://eslint.vuejs.org/user-guide/#why-doesn-t-it-work-on-vue-file
     // required to lint *.vue files
     "vue",
-    "prettier"
   ],
 
   globals: {
@@ -49,10 +48,6 @@ module.exports = {
     "no-param-reassign": "off",
 
     "import/first": "off",
-    "import/named": "error",
-    "import/namespace": "error",
-    "import/default": "error",
-    "import/export": "error",
     "import/extensions": "off",
     "import/no-unresolved": "off",
     "import/no-extraneous-dependencies": "off",
