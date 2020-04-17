@@ -2,7 +2,7 @@
   "name": "svd-system-ui",
   "version": "0.0.1",
   "description": "Interface do usuário do SVD System",
-  "productName": "SVD System UI",
+  "productName": "SVD System",
   "cordovaId": "",
   "capacitorId": "",
   "author": "lericardolima <lericardolima@gmail.com>",
