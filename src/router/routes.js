@@ -1,10 +1,9 @@
 import MainLayout from '../layouts/MainLayout';
 import Index from '../pages/Index';
-import Error404 from '../pages/Error404';
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     component: MainLayout,
     children: [{ path: '', component: Index }],
   },
@@ -14,7 +13,7 @@ const routes = [
 if (process.env.MODE !== 'ssr') {
   routes.push({
     path: '*',
-    component: Error404,
+    redirect: '/home',
   });
 }
 
