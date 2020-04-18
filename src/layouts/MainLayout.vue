@@ -5,9 +5,9 @@
         <q-avatar>
           <img src="~/assets/svd-black-logo.svg" />
         </q-avatar>
-        <q-toolbar-title class="text-dark svd-title">
-          {{ appTitle }}
-        </q-toolbar-title>
+        <q-toolbar-title class="text-dark svd-title">{{
+          appTitle
+        }}</q-toolbar-title>
       </q-toolbar>
     </q-header>
     <q-page-container class="bg-primary">
