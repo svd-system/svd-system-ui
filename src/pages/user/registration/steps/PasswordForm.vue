@@ -1,8 +1,8 @@
 <template>
   <div>
-    <q-card-section class="q-pa-none q-gutter-sm">
+    <q-card-section v-if="this.user" class="q-pa-none q-gutter-sm">
       <router-link to="/register" tag="a">
-        Voltar para a tela anterior
+        Voltar para o cadastro
       </router-link>
       <p class="text-h6 text-dark text-center svd-title">
         Informe uma senha de acesso.
@@ -17,6 +17,7 @@
             disabled
             placeholder="CPF"
             :dense="true"
+            v-model="user.cpf"
           />
         </div>
         <div class="row">
@@ -25,6 +26,7 @@
             outlined
             placeholder="Senha"
             :dense="true"
+            v-model="password"
           />
           <div class="col q-px-lg self-center text-negative">
             * Senha é obrigatória
@@ -44,16 +46,17 @@
       </q-form>
     </q-card-section>
     <q-card-actions class="row justify-center">
-      <q-btn @click.prevent="confirm" color="primary" label="Confirmar" />
+      <q-btn @click.prevent="create" color="primary" label="Confirmar" />
     </q-card-actions>
     <q-dialog v-model="alert">
-      <q-card>
+      <q-card v-if="success">
         <q-card-section>
-          <div class="text-h6">Seja bem vindo, Usuário!</div>
+          <div class="text-h6">Seja bem vindo, {{ user.firstName }}!</div>
+          <hr>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-            Seu cadastro foi concluído com sucesso e você já pode fazer o login.
+            <p>Seu cadastro foi concluído com sucesso e você já pode fazer o login.</p>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -64,15 +67,36 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations } from 'vuex';
+import types from '../../../../store/types';
+
 export default {
   data() {
     return {
       alert: false,
+      password: '',
+      success: false,
     };
   },
+  computed: {
+    ...mapGetters(types.namespaces.REGISTRATION, {
+      user: types.getters.GET_USER,
+    }),
+  },
   methods: {
-    confirm() {
-      this.alert = true;
+    ...mapMutations(types.namespaces.REGISTRATION, {
+      setUser: types.mutations.SET_USER,
+    }),
+    create() {
+      this.user.password = this.password;
+      this.$axios.post('/api/users', this.user)
+        .then(() => {
+          this.setUser({});
+          this.success = true;
+          this.alert = true;
+        }).catch(() => {
+          this.alert = true;
+        });
     },
   },
 };

@@ -32,18 +32,14 @@ const routes = [
               },
             ],
           },
+          {
+            path: '*',
+            redirect: '/login',
+          },
         ],
       },
     ],
   },
 ];
-
-// Always leave this as last one
-if (process.env.MODE !== 'ssr') {
-  routes.push({
-    path: '*',
-    redirect: '/login',
-  });
-}
 
 export default routes;
