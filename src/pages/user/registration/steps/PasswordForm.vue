@@ -55,7 +55,9 @@
               :error="isConfirmPasswordInvalid"
             >
               <template v-slot:error>
-                <p v-if="!isOkConfirmPasswordRequired">* Confirmar a senha é obrigatorio.</p>
+                <p v-if="!isOkConfirmPasswordRequired">
+                  * Confirmar a senha é obrigatorio.
+                </p>
                 <p v-else-if="!isOkConfirmPasswordSameAsPassword">
                   * As senhas informadas são diferentes.
                 </p>
@@ -66,37 +68,43 @@
       </q-form>
     </q-card-section>
     <q-card-actions v-if="user" class="row justify-center">
-      <q-btn :disable="isUserInvalid" @click.prevent="create" color="primary" label="Confirmar" />
+      <q-btn
+        :disable="isUserInvalid"
+        @click="create"
+        color="primary"
+        label="Confirmar"
+      />
     </q-card-actions>
-    <q-dialog v-if="user" v-model="alert">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Seja bem vindo(a), {{ user.firstName }}!</div>
-          <hr />
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <p>
-            Seu cadastro foi concluído com sucesso e você já pode fazer o login.
-          </p>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="OK" color="primary" to="/login" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <alert-error ref="alertError">
+      <p slot="title">Algo deu errado!</p>
+      <p slot="message">
+        Infelizmente um erro ocorreu ao tentar finalizar seu cadastro. Tente
+        novamente em breve ou contate o suporte.
+      </p>
+    </alert-error>
+    <alert-success ref="alertSuccess" @onClickOK="goToLogin">
+      <p slot="title">Seja bem vindo, {{ user.firstName }}!</p>
+      <p slot="message">
+        Seu cadastro no SVD System foi concluído com sucesso. Faça o login e
+        comece a cuidar da sua saúde agora mesmo.
+      </p>
+    </alert-success>
   </div>
 </template>
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 import { required, minLength, sameAs } from 'vuelidate/lib/validators';
 import types from '../../../../store/types';
+import AlertError from '../../../../components/shared/alert/Error';
+import AlertSuccess from '../../../../components/shared/alert/Success';
 
 export default {
+  components: {
+    AlertError,
+    AlertSuccess,
+  },
   data() {
     return {
-      alert: false,
       password: '',
       confirmPassword: '',
     };
@@ -136,20 +144,20 @@ export default {
     ...mapMutations(types.namespaces.REGISTRATION, {
       setUser: types.mutations.SET_USER,
     }),
-    openDialog() {
-      this.alert = true;
-    },
     create() {
       this.user.password = this.password;
       this.$axios
         .post('/api/users', this.user)
         .then(() => {
           this.setUser(null);
-          this.openDialog();
+          this.$refs.alertSuccess.open();
         })
         .catch(() => {
-          this.openDialog();
+          this.$refs.alertError.open();
         });
+    },
+    goToLogin() {
+      this.$router.push('/login');
     },
   },
   validations: {
