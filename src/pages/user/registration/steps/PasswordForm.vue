@@ -9,38 +9,49 @@
       </p>
     </q-card-section>
     <q-card-section class="q-px-none">
-      <q-form class="q-gutter-sm">
-        <div class="row">
-          <q-input
-            class="col col-6"
-            outlined
-            disabled
-            placeholder="CPF"
-            :dense="true"
-            v-model="user.cpf"
-          />
-        </div>
-        <div class="row">
-          <q-input
-            class="col col-6"
-            outlined
-            placeholder="Senha"
-            :dense="true"
-            v-model="password"
-          />
-          <div class="col q-px-lg self-center text-negative">
-            * Senha é obrigatória
+      <q-form class="row justify-center">
+        <div class="col col-6 q-col-gutter-sm">
+          <div class="row wrap q-gutter-sm">
+            <q-input
+              class="col"
+              outlined
+              disabled
+              label="CPF"
+              stack-label
+              :dense="true"
+              v-model="user.cpf"
+              :error="false"
+            />
           </div>
-        </div>
-        <div class="row">
-          <q-input
-            class="col col-6"
-            outlined
-            placeholder="Confimar senha"
-            :dense="true"
-          />
-          <div class="col q-px-lg self-center text-negative">
-            * As senhas digitadas não conferem
+          <div class="row wrap q-gutter-sm">
+            <q-input
+              class="col"
+              outlined
+              label="Senha"
+              stack-label
+              :dense="true"
+              v-model="password"
+              :error="$v.password.$invalid"
+            >
+              <template v-slot:error>
+                * Senha é obrigatória.
+              </template>
+            </q-input>
+          </div>
+          <div class="row wrap q-gutter-sm">
+            <q-input
+              class="col"
+              outlined
+              label="Confirmar senha"
+              stack-label
+              :dense="true"
+              v-model="password"
+              :error="$v.password.$invalid"
+            >
+              <template v-slot:error>
+                * Senhas não conferem.
+              </template>
+            </q-input>
           </div>
         </div>
       </q-form>
@@ -52,11 +63,13 @@
       <q-card v-if="success">
         <q-card-section>
           <div class="text-h6">Seja bem vindo, {{ user.firstName }}!</div>
-          <hr>
+          <hr />
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-            <p>Seu cadastro foi concluído com sucesso e você já pode fazer o login.</p>
+          <p>
+            Seu cadastro foi concluído com sucesso e você já pode fazer o login.
+          </p>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -68,6 +81,7 @@
 </template>
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import { required } from 'vuelidate/lib/validators';
 import types from '../../../../store/types';
 
 export default {
@@ -89,14 +103,21 @@ export default {
     }),
     create() {
       this.user.password = this.password;
-      this.$axios.post('/api/users', this.user)
+      this.$axios
+        .post('/api/users', this.user)
         .then(() => {
           this.setUser({});
           this.success = true;
           this.alert = true;
-        }).catch(() => {
+        })
+        .catch(() => {
           this.alert = true;
         });
+    },
+  },
+  validations: {
+    password: {
+      required,
     },
   },
 };

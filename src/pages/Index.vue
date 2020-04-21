@@ -19,10 +19,10 @@ export default {};
   min-width: 750px;
 }
 .slide-enter-active {
-  animation: slide-in 200ms ease-out forwards;
+  animation: slide-in .3s ease-out forwards;
 }
 .slide-leave-active {
-  animation: slide-out 200ms ease-out forwards;
+  animation: slide-out .3s ease-out forwards;
 }
 @keyframes slide-in {
   from {
