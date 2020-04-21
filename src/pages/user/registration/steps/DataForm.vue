@@ -89,8 +89,9 @@
                     transition-hide="scale"
                   >
                     <q-date
-                      mask="DD/MM/YYYY"
+                      :mask="dateUtils.MASK"
                       v-model="user.birthDate"
+                      :locale="dateUtils.LOCALE"
                       @input="() => $refs.qDateProxy.hide()"
                     />
                   </q-popup-proxy>
@@ -263,12 +264,12 @@ import { mapMutations } from 'vuex';
 import {
   required,
   email,
-  minLength,
-  maxLength,
   numeric,
   alpha,
+  helpers,
 } from 'vuelidate/lib/validators';
 import types from '../../../../store/types';
+import dateUtils from '../../../../utils/date';
 
 export default {
   methods: {
@@ -278,9 +279,19 @@ export default {
     continue() {
       this.setUser(this.user);
     },
+    checkUnique(query) {
+      return this.$axios
+        .get('/api/users/count', { params: query })
+        .then((response) => response.data.count <= 0)
+        .catch(() => false);
+    },
+    checkLength(value, length) {
+      return helpers.len(value) === length;
+    },
   },
   data() {
     return {
+      dateUtils,
       confirmEmail: '',
       user: {
         firstName: '',
@@ -351,7 +362,7 @@ export default {
       return this.$v.user.cpf.numeric;
     },
     isOkCpfLength() {
-      return this.$v.user.cpf.minLength && this.$v.user.cpf.maxLength;
+      return this.$v.user.cpf.length;
     },
     isOkCpfUnique() {
       return this.$v.user.cpf.unique;
@@ -410,34 +421,24 @@ export default {
       cpf: {
         required,
         numeric,
-        minLength: minLength(11),
-        maxLength: maxLength(11),
+        length(value) {
+          return this.checkLength(value, 11);
+        },
         unique(value) {
-          return (
-            value
-            && value.length === 11
-            && this.$axios
-              .get('/api/users/count', { params: { cpf: value } })
-              .then((response) => response.data.count <= 0)
-              .catch(() => false)
-          );
+          return this.checkUnique({ cpf: value });
         },
       },
       birthDate: {
         required,
-        maxValue: (birthDate) => birthDate < new Date().toLocaleString(),
+        maxValue(value) {
+          return value < new Date().toLocaleString();
+        },
       },
       email: {
         required,
         email,
         unique(value) {
-          return (
-            value
-            && this.$axios
-              .get('/api/users/count', { params: { email: value } })
-              .then((response) => response.data.count <= 0)
-              .catch(() => false)
-          );
+          return this.checkUnique({ email: value.toLowerCase() });
         },
       },
       phoneNumber: {
@@ -450,7 +451,7 @@ export default {
       cep: {
         numeric,
         length(value) {
-          return !value || value.length === 8;
+          return !value || this.checkLength(value, 8);
         },
       },
       city: {
@@ -460,7 +461,7 @@ export default {
         required,
         alpha,
         length(value) {
-          return !value || value.length === 2;
+          return !value || this.checkLength(value, 2);
         },
       },
     },
