@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-card-section v-if="this.user" class="q-pa-none q-gutter-sm">
+    <q-card-section class="q-pa-none q-gutter-sm">
       <router-link to="/register" tag="a">
         Voltar para o cadastro
       </router-link>
@@ -8,7 +8,7 @@
         Informe uma senha de acesso.
       </p>
     </q-card-section>
-    <q-card-section class="q-px-none">
+    <q-card-section v-if="user" class="q-px-none">
       <q-form class="row justify-center">
         <div class="col col-6 q-col-gutter-sm">
           <div class="row wrap q-gutter-sm">
@@ -25,44 +25,53 @@
           </div>
           <div class="row wrap q-gutter-sm">
             <q-input
+              type="password"
               class="col"
               outlined
               label="Senha"
               stack-label
               :dense="true"
               v-model="password"
-              :error="$v.password.$invalid"
+              :error="isPasswordInvalid"
             >
               <template v-slot:error>
-                * Senha é obrigatória.
+                <p v-if="!isOkPasswordRequired">* Senha é obrigatoria.</p>
+                <p v-else-if="!isOkPasswordMinLength">
+                  * A senha deve possuir ao menos 8 dígitos.
+                </p>
               </template>
             </q-input>
           </div>
           <div class="row wrap q-gutter-sm">
             <q-input
+              type="password"
               class="col"
               outlined
               label="Confirmar senha"
               stack-label
               :dense="true"
-              v-model="password"
-              :error="$v.password.$invalid"
+              :disabled="isPasswordInvalid"
+              v-model="confirmPassword"
+              :error="isConfirmPasswordInvalid"
             >
               <template v-slot:error>
-                * Senhas não conferem.
+                <p v-if="!isOkConfirmPasswordRequired">* Confirmar a senha é obrigatorio.</p>
+                <p v-else-if="!isOkConfirmPasswordSameAsPassword">
+                  * As senhas informadas são diferentes.
+                </p>
               </template>
             </q-input>
           </div>
         </div>
       </q-form>
     </q-card-section>
-    <q-card-actions class="row justify-center">
-      <q-btn @click.prevent="create" color="primary" label="Confirmar" />
+    <q-card-actions v-if="user" class="row justify-center">
+      <q-btn :disable="isUserInvalid" @click.prevent="create" color="primary" label="Confirmar" />
     </q-card-actions>
-    <q-dialog v-model="alert">
-      <q-card v-if="success">
+    <q-dialog v-if="user" v-model="alert">
+      <q-card>
         <q-card-section>
-          <div class="text-h6">Seja bem vindo, {{ user.firstName }}!</div>
+          <div class="text-h6">Seja bem vindo(a), {{ user.firstName }}!</div>
           <hr />
         </q-card-section>
 
@@ -81,7 +90,7 @@
 </template>
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import { required } from 'vuelidate/lib/validators';
+import { required, minLength, sameAs } from 'vuelidate/lib/validators';
 import types from '../../../../store/types';
 
 export default {
@@ -89,35 +98,63 @@ export default {
     return {
       alert: false,
       password: '',
-      success: false,
+      confirmPassword: '',
     };
   },
   computed: {
     ...mapGetters(types.namespaces.REGISTRATION, {
       user: types.getters.GET_USER,
     }),
+    isUserInvalid() {
+      return this.$v.$invalid;
+    },
+    isPasswordInvalid() {
+      return this.$v.password.$invalid;
+    },
+    isConfirmPasswordInvalid() {
+      return this.$v.confirmPassword.$invalid;
+    },
+    isOkPasswordRequired() {
+      return this.$v.password.required;
+    },
+    isOkPasswordMinLength() {
+      return this.$v.password.minLength;
+    },
+    isOkConfirmPasswordRequired() {
+      return this.$v.confirmPassword.required;
+    },
+    isOkConfirmPasswordSameAsPassword() {
+      return this.$v.confirmPassword.sameAsEmail;
+    },
   },
   methods: {
     ...mapMutations(types.namespaces.REGISTRATION, {
       setUser: types.mutations.SET_USER,
     }),
+    openDialog() {
+      this.alert = true;
+    },
     create() {
       this.user.password = this.password;
       this.$axios
         .post('/api/users', this.user)
         .then(() => {
-          this.setUser({});
-          this.success = true;
-          this.alert = true;
+          this.setUser(null);
+          this.openDialog();
         })
         .catch(() => {
-          this.alert = true;
+          this.openDialog();
         });
     },
   },
   validations: {
     password: {
       required,
+      minLength: minLength(8),
+    },
+    confirmPassword: {
+      required,
+      sameAsPassword: sameAs('password'),
     },
   },
 };
