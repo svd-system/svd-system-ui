@@ -7,6 +7,8 @@
 
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
+const eslint = require('eslint');
+const envparser = require('./envparser.config');
 
 // eslint-disable-next-line func-names
 module.exports = function (/* ctx */) {
@@ -66,7 +68,7 @@ module.exports = function (/* ctx */) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-
+      env: envparser(),
       // rtl: false, // https://quasar.dev/options/rtl-support
       // showProgress: false,
       // gzip: true,
@@ -84,8 +86,7 @@ module.exports = function (/* ctx */) {
           loader: 'eslint-loader',
           exclude: /node_modules/,
           options: {
-            // eslint-disable-next-line global-require
-            formatter: require('eslint').CLIEngine.getFormatter('stylish'),
+            formatter: eslint.CLIEngine.getFormatter('stylish'),
           },
         });
       },
