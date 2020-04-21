@@ -2,7 +2,9 @@
   <div>
     <q-card class="q-pa-xl col col-6">
       <transition name="slide-fade" mode="out-in">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </transition>
     </q-card>
   </div>

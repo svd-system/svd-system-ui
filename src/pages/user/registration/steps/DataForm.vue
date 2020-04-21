@@ -249,7 +249,6 @@
     </q-card-section>
     <q-card-actions class="row justify-center">
       <q-btn
-        to="/register/password"
         color="primary"
         label="Continuar"
         :disable="isUserInvalid"
@@ -272,23 +271,6 @@ import types from '../../../../store/types';
 import dateUtils from '../../../../utils/date';
 
 export default {
-  methods: {
-    ...mapMutations(types.namespaces.REGISTRATION, {
-      setUser: types.mutations.SET_USER,
-    }),
-    continue() {
-      this.setUser(this.user);
-    },
-    checkUnique(query) {
-      return this.$axios
-        .get('/api/users/count', { params: query })
-        .then((response) => response.data.count <= 0)
-        .catch(() => false);
-    },
-    checkLength(value, length) {
-      return helpers.len(value) === length;
-    },
-  },
   data() {
     return {
       dateUtils,
@@ -308,6 +290,30 @@ export default {
         state: '',
       },
     };
+  },
+  methods: {
+    ...mapMutations(types.namespaces.REGISTRATION, {
+      setUser: types.mutations.SET_USER,
+    }),
+    loadUser() {
+      const user = this.getUser();
+      if (user) {
+        this.user = { ...user };
+      }
+    },
+    checkUnique(query) {
+      return this.$axios
+        .get('/api/users/count', { params: query })
+        .then((response) => response.data.count <= 0)
+        .catch(() => false);
+    },
+    checkLength(value, length) {
+      return helpers.len(value) === length;
+    },
+    continue() {
+      this.setUser(this.user);
+      this.$router.push('/register/password');
+    },
   },
   computed: {
     // Checagem se atributos são válidos.

@@ -127,6 +127,11 @@ export default {
       return this.$v.confirmPassword.sameAsEmail;
     },
   },
+  created() {
+    if (!this.user) {
+      this.$router.push('/login');
+    }
+  },
   methods: {
     ...mapMutations(types.namespaces.REGISTRATION, {
       setUser: types.mutations.SET_USER,
