@@ -19,7 +19,7 @@
               stack-label
               :dense="true"
               v-model="user.firstName"
-              :error="$v.user.firstName.$invalid"
+              :error="isFirstNameInvalid"
             >
               <template v-slot:error>
                 * Nome é obrigatório.
@@ -32,7 +32,7 @@
               stack-label
               :dense="true"
               v-model="user.lastName"
-              :error="$v.user.lastName.$invalid"
+              :error="isLastNameInvalid"
             >
               <template v-slot:error>
                 * Sobrenome é obrigatório.
@@ -47,10 +47,21 @@
               stack-label
               :dense="true"
               v-model="user.cpf"
-              :error="$v.user.cpf.$invalid"
+              :error="isCpfInvalid"
             >
               <template v-slot:error>
-                * CPF é obrigatório.
+                <p v-if="!isOkCpfRequired">* CPF é obrigatorio.</p>
+                <p v-else-if="!isOkCpfNumeric">
+                  * Somente números.
+                </p>
+                <p
+                  v-else-if="!isOkCpfLength"
+                >
+                  * CPF possui 11 dígitos.
+                </p>
+                <p v-else-if="!isOkCpfUnique">
+                  * CPF já cadastrado.
+                </p>
               </template>
             </q-input>
             <q-input
@@ -60,11 +71,15 @@
               stack-label
               :dense="true"
               v-model="user.birthDate"
-              mask="date"
-              :error="$v.user.birthDate.$invalid"
+              :error="isBirthDateInvalid"
             >
               <template v-slot:error>
-                * Data de nascimento é obrigatória.
+                <p v-if="!isOkBirthDateRequired">
+                  * Data de nascimento é obrigatorio.
+                </p>
+                <p v-else-if="!isOkBirthDateMaxValue">
+                  * Datas futuras não são permitidas.
+                </p>
               </template>
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -73,7 +88,11 @@
                     transition-show="scale"
                     transition-hide="scale"
                   >
-                    <q-date v-model="user.birthDate" />
+                    <q-date
+                      mask="DD/MM/YYYY"
+                      v-model="user.birthDate"
+                      @input="() => $refs.qDateProxy.hide()"
+                    />
                   </q-popup-proxy>
                 </q-icon>
               </template>
@@ -87,10 +106,16 @@
               stack-label
               :dense="true"
               v-model="user.email"
-              :error="$v.user.email.$invalid"
+              :error="isEmailInvalid"
             >
               <template v-slot:error>
-                * Email é obrigatório.
+                <p v-if="!isOkEmailRequired">* Email é obrigatorio.</p>
+                <p v-else-if="!isOkEmailEmail">
+                  * Email inválido.
+                </p>
+                <p v-else-if="!isOkEmailUnique">
+                  * Email já cadastrado.
+                </p>
               </template>
             </q-input>
           </div>
@@ -100,14 +125,49 @@
               outlined
               label="Confirmar email"
               stack-label
-              :disabled="true"
+              :disabled="isEmailInvalid"
               :dense="true"
-              :error="$v.user.cpf.$invalid"
+              v-model="confirmEmail"
+              :error="isConfirmEmailInvalid"
             >
               <template v-slot:error>
-                * Emails não conferem.
+                <p v-if="!isOkConfirmEmailRequired">
+                  * Confirmar email é obrigatorio.
+                </p>
+                <p v-else-if="!isOkConfirmEmailSameAsEmail">
+                  * Emails informados não conferem.
+                </p>
               </template>
             </q-input>
+          </div>
+          <div class="row wrap q-gutter-sm">
+            <q-input
+              class="col col-4"
+              outlined
+              label="Telefone"
+              stack-label
+              :dense="true"
+              v-model="user.phoneNumber"
+              :error="isPhoneNumberInvalid"
+            >
+              <template v-slot:error>
+                <p v-if="!isOkPhoneNumberRequired">
+                  * Telefone é obrigatorio.
+                </p>
+                <p v-else-if="!isOkPhoneNumberNumeric">
+                  * Somente números.
+                </p>
+              </template>
+            </q-input>
+            <q-input
+              class="col"
+              outlined
+              label="Profissão"
+              stack-label
+              :dense="true"
+              v-model="user.professionalOccupation"
+              :error="isProfessionalOccupationInvalid"
+            />
           </div>
           <div class="row">
             <q-input
@@ -117,7 +177,7 @@
               stack-label
               :dense="true"
               v-model="user.address"
-              :error="$v.user.address.$invalid"
+              :error="isAddressInvalid"
             />
             <q-input
               class="col q-ml-sm"
@@ -126,19 +186,28 @@
               stack-label
               :dense="true"
               v-model="user.addressNumber"
-              :error="$v.user.addressNumber.$invalid"
+              :error="isAddressNumberInvalid"
             />
           </div>
           <div class="row col-6">
             <q-input
               class="col col-3"
               outlined
-              label="CEP"
+              label="CEP (sem hífen)"
               stack-label
               :dense="true"
               v-model="user.cep"
-              :error="$v.user.cep.$invalid"
-            />
+              :error="isCepInvalid"
+            >
+              <template v-slot:error>
+                <p v-if="!isOkCepNumeric">
+                  * CEP inválido.
+                </p>
+                <p v-else-if="!isOkCepLength">
+                  * CEP contém 8 dígitos.
+                </p>
+              </template>
+            </q-input>
             <q-input
               class="col q-ml-sm col-3"
               outlined
@@ -146,10 +215,18 @@
               stack-label
               :dense="true"
               v-model="user.state"
-              :error="$v.user.state.$invalid"
+              :error="isStateInvalid"
             >
               <template v-slot:error>
-                * UF é obrigatório.
+                <p v-if="!isOkStateRequired">
+                  * UF é obrigatório.
+                </p>
+                <p v-else-if="!isOkStateAlpha">
+                  * Somente letras.
+                </p>
+                <p v-else-if="!isOkStateLength">
+                  * UF contém 2 dígitos.
+                </p>
               </template>
             </q-input>
             <q-input
@@ -166,17 +243,6 @@
               </template>
             </q-input>
           </div>
-          <div class="row">
-            <q-input
-              class="col"
-              outlined
-              label="Profissão"
-              stack-label
-              :dense="true"
-              v-model="user.professionalOccupation"
-              :error="$v.user.professionalOccupation.$invalid"
-            />
-          </div>
         </div>
       </q-form>
     </q-card-section>
@@ -185,6 +251,7 @@
         to="/register/password"
         color="primary"
         label="Continuar"
+        :disable="isUserInvalid"
         @click="this.continue"
       />
     </q-card-actions>
@@ -193,7 +260,14 @@
 
 <script>
 import { mapMutations } from 'vuex';
-import { required, email } from 'vuelidate/lib/validators';
+import {
+  required,
+  email,
+  minLength,
+  maxLength,
+  numeric,
+  alpha,
+} from 'vuelidate/lib/validators';
 import types from '../../../../store/types';
 
 export default {
@@ -207,20 +281,123 @@ export default {
   },
   data() {
     return {
+      confirmEmail: '',
       user: {
         firstName: '',
         lastName: '',
         cpf: '',
         birthDate: '',
         email: '',
+        phoneNumber: '',
+        professionalOccupation: '',
         address: '',
         addressNumber: '',
         cep: '',
         city: '',
         state: '',
-        professionalOccupation: '',
       },
     };
+  },
+  computed: {
+    // Checagem se atributos são válidos.
+    isUserInvalid() {
+      return this.$v.$invalid;
+    },
+    isFirstNameInvalid() {
+      return this.$v.user.firstName.$invalid;
+    },
+    isLastNameInvalid() {
+      return this.$v.user.lastName.$invalid;
+    },
+    isCpfInvalid() {
+      return this.$v.user.cpf.$invalid;
+    },
+    isBirthDateInvalid() {
+      return this.$v.user.birthDate.$invalid;
+    },
+    isEmailInvalid() {
+      return this.$v.user.email.$invalid;
+    },
+    isConfirmEmailInvalid() {
+      return this.$v.confirmEmail.$invalid;
+    },
+    isPhoneNumberInvalid() {
+      return this.$v.user.phoneNumber.$invalid;
+    },
+    isProfessionalOccupationInvalid() {
+      return this.$v.user.professionalOccupation.$invalid;
+    },
+    isAddressInvalid() {
+      return this.$v.user.address.$invalid;
+    },
+    isAddressNumberInvalid() {
+      return this.$v.user.addressNumber.$invalid;
+    },
+    isCepInvalid() {
+      return this.$v.user.cep.$invalid;
+    },
+    isStateInvalid() {
+      return this.$v.user.state.$invalid;
+    },
+    isCityInvalid() {
+      return this.$v.user.city.$invalid;
+    },
+
+    // Para atributos com mais de uma validação, checa cada uma delas.
+    isOkCpfRequired() {
+      return this.$v.user.cpf.required;
+    },
+    isOkCpfNumeric() {
+      return this.$v.user.cpf.numeric;
+    },
+    isOkCpfLength() {
+      return this.$v.user.cpf.minLength && this.$v.user.cpf.maxLength;
+    },
+    isOkCpfUnique() {
+      return this.$v.user.cpf.unique;
+    },
+    isOkBirthDateRequired() {
+      return this.$v.user.birthDate.required;
+    },
+    isOkBirthDateMaxValue() {
+      return this.$v.user.birthDate.maxValue;
+    },
+    isOkEmailRequired() {
+      return this.$v.user.email.required;
+    },
+    isOkEmailEmail() {
+      return this.$v.user.email.email;
+    },
+    isOkEmailUnique() {
+      return this.$v.user.email.unique;
+    },
+    isOkConfirmEmailRequired() {
+      return this.$v.confirmEmail.required;
+    },
+    isOkConfirmEmailSameAsEmail() {
+      return this.$v.confirmEmail.sameAsEmail;
+    },
+    isOkPhoneNumberRequired() {
+      return this.$v.user.phoneNumber.required;
+    },
+    isOkPhoneNumberNumeric() {
+      return this.$v.user.phoneNumber.numeric;
+    },
+    isOkCepNumeric() {
+      return this.$v.user.cep.numeric;
+    },
+    isOkCepLength() {
+      return this.$v.user.cep.length;
+    },
+    isOkStateRequired() {
+      return this.$v.user.state.required;
+    },
+    isOkStateAlpha() {
+      return this.$v.user.state.alpha;
+    },
+    isOkStateLength() {
+      return this.$v.user.state.length;
+    },
   },
   validations: {
     user: {
@@ -232,24 +409,66 @@ export default {
       },
       cpf: {
         required,
+        numeric,
+        minLength: minLength(11),
+        maxLength: maxLength(11),
+        unique(value) {
+          return (
+            value
+            && value.length === 11
+            && this.$axios
+              .get('/api/users/count', { params: { cpf: value } })
+              .then((response) => response.data.count <= 0)
+              .catch(() => false)
+          );
+        },
       },
       birthDate: {
         required,
+        maxValue: (birthDate) => birthDate < new Date().toLocaleString(),
       },
       email: {
         required,
         email,
+        unique(value) {
+          return (
+            value
+            && this.$axios
+              .get('/api/users/count', { params: { email: value } })
+              .then((response) => response.data.count <= 0)
+              .catch(() => false)
+          );
+        },
       },
+      phoneNumber: {
+        required,
+        numeric,
+      },
+      professionalOccupation: {},
       address: {},
       addressNumber: {},
-      cep: {},
+      cep: {
+        numeric,
+        length(value) {
+          return !value || value.length === 8;
+        },
+      },
       city: {
         required,
       },
       state: {
         required,
+        alpha,
+        length(value) {
+          return !value || value.length === 2;
+        },
       },
-      professionalOccupation: {},
+    },
+    confirmEmail: {
+      required,
+      sameAsEmail(value) {
+        return value && value === this.user.email;
+      },
     },
   },
 };

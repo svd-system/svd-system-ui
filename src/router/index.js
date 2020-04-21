@@ -4,8 +4,8 @@ import Vuelidate from 'vuelidate';
 
 import routes from './routes';
 
-Vue.use(VueRouter);
 Vue.use(Vuelidate);
+Vue.use(VueRouter);
 
 /*
  * If not building with SSR mode, you can
