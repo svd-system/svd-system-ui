@@ -267,8 +267,8 @@ import {
   alpha,
   helpers,
 } from 'vuelidate/lib/validators';
-import types from '../../../../store/types';
-import dateUtils from '../../../../utils/date';
+import types from '../../../store/types';
+import dateUtils from '../../../utils/date';
 
 export default {
   data() {

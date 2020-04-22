@@ -94,10 +94,10 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 import { required, minLength, sameAs } from 'vuelidate/lib/validators';
-import types from '../../../../store/types';
-import AlertError from '../../../../components/shared/alert/Error';
-import AlertSuccess from '../../../../components/shared/alert/Success';
-import dateUtils from '../../../../utils/date';
+import types from '../../../store/types';
+import AlertError from '../../../components/shared/alert/Error';
+import AlertSuccess from '../../../components/shared/alert/Success';
+import dateUtils from '../../../utils/date';
 
 export default {
   components: {
