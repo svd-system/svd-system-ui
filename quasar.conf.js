@@ -7,6 +7,8 @@
 
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
+const eslint = require('eslint');
+const envparser = require('./envparser.config');
 
 // eslint-disable-next-line func-names
 module.exports = function (/* ctx */) {
@@ -14,7 +16,10 @@ module.exports = function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
-    boot: ['axios'],
+    boot: [
+      'axios',
+      'vuelidate',
+    ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: ['app.scss'],
@@ -63,7 +68,7 @@ module.exports = function (/* ctx */) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-
+      env: envparser(),
       // rtl: false, // https://quasar.dev/options/rtl-support
       // showProgress: false,
       // gzip: true,
@@ -81,8 +86,7 @@ module.exports = function (/* ctx */) {
           loader: 'eslint-loader',
           exclude: /node_modules/,
           options: {
-            // eslint-disable-next-line global-require
-            formatter: require('eslint').CLIEngine.getFormatter('stylish'),
+            formatter: eslint.CLIEngine.getFormatter('stylish'),
           },
         });
       },
@@ -91,7 +95,7 @@ module.exports = function (/* ctx */) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       https: false,
-      port: 8080,
+      port: 4200,
       open: true, // opens browser window automatically
     },
 
