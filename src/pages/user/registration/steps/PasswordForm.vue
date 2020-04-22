@@ -97,6 +97,7 @@ import { required, minLength, sameAs } from 'vuelidate/lib/validators';
 import types from '../../../../store/types';
 import AlertError from '../../../../components/shared/alert/Error';
 import AlertSuccess from '../../../../components/shared/alert/Success';
+import dateUtils from '../../../../utils/date';
 
 export default {
   components: {
@@ -145,9 +146,25 @@ export default {
       setUser: types.mutations.SET_USER,
     }),
     create() {
-      this.user.password = this.password;
+      const user = {
+        firstName: this.user.firstName,
+        lastName: this.user.lastName,
+        cpf: this.user.cpf,
+        birthDate: dateUtils.toString(this.user.birthDate),
+        phoneNumber: this.user.phoneNumber,
+        email: this.user.email,
+        address: this.user.address,
+        addressNumber: this.user.addressNumber,
+        cep: this.user.cep,
+        city: this.user.city,
+        state: this.user.state,
+        professionalOccupation: this.user.professionalOccupation,
+        password: this.password,
+        role: 'PACIENTE',
+      };
+
       this.$axios
-        .post('/api/users', this.user)
+        .post('/api/users', user)
         .then(() => {
           this.setUser(null);
           this.$refs.alertSuccess.open();
