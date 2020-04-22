@@ -166,7 +166,6 @@ export default {
       this.$axios
         .post('/api/users', user)
         .then(() => {
-          this.setUser(null);
           this.$refs.alertSuccess.open();
         })
         .catch(() => {
@@ -174,6 +173,7 @@ export default {
         });
     },
     goToLogin() {
+      this.setUser(null);
       this.$router.push('/login');
     },
   },
