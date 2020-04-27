@@ -54,9 +54,7 @@
                 <p v-else-if="!isOkCpfNumeric">
                   * Somente números.
                 </p>
-                <p
-                  v-else-if="!isOkCpfLength"
-                >
+                <p v-else-if="!isOkCpfLength">
                   * CPF possui 11 dígitos.
                 </p>
                 <p v-else-if="!isOkCpfUnique">
@@ -65,7 +63,7 @@
               </template>
             </q-input>
             <q-input
-              class="col col-xs-5 col-lg-3"
+              class="col col-xs-5 col-lg-4"
               outlined
               label="Data de nascimento"
               stack-label
@@ -98,6 +96,16 @@
                 </q-icon>
               </template>
             </q-input>
+            <q-select
+              class="col"
+              label="Sexo"
+              stack-label
+              outlined
+              v-model="user.genre"
+              :options="options"
+              :dense="true"
+              :error="isGenreInvalid"
+            />
           </div>
           <div class="row">
             <q-input
@@ -174,7 +182,7 @@
             <q-input
               class="col-8"
               outlined
-              label="Endereço"
+              label="Logradouro"
               stack-label
               :dense="true"
               v-model="user.address"
@@ -186,8 +194,8 @@
               label="Número"
               stack-label
               :dense="true"
-              v-model="user.addressNumber"
-              :error="isAddressNumberInvalid"
+              v-model="user.houseNumber"
+              :error="isHouseNumberInvalid"
             />
           </div>
           <div class="row col-6">
@@ -267,12 +275,18 @@ import {
   alpha,
   helpers,
 } from 'vuelidate/lib/validators';
-import types from '../../../../store/types';
-import dateUtils from '../../../../utils/date';
+import types from '../../../store/types';
+import dateUtils from '../../../shared/utils/date';
+import Genre from '../../../shared/enums/genre';
 
 export default {
   data() {
     return {
+      options: [
+        '',
+        Genre.FEMININO,
+        Genre.MASCULINO,
+      ],
       dateUtils,
       confirmEmail: '',
       user: {
@@ -280,11 +294,12 @@ export default {
         lastName: '',
         cpf: '',
         birthDate: '',
+        genre: '',
         email: '',
         phoneNumber: '',
         professionalOccupation: '',
         address: '',
-        addressNumber: '',
+        houseNumber: '',
         cep: '',
         city: '',
         state: '',
@@ -332,6 +347,9 @@ export default {
     isBirthDateInvalid() {
       return this.$v.user.birthDate.$invalid;
     },
+    isGenreInvalid() {
+      return this.$v.user.genre.$invalid;
+    },
     isEmailInvalid() {
       return this.$v.user.email.$invalid;
     },
@@ -347,8 +365,8 @@ export default {
     isAddressInvalid() {
       return this.$v.user.address.$invalid;
     },
-    isAddressNumberInvalid() {
-      return this.$v.user.addressNumber.$invalid;
+    isHouseNumberInvalid() {
+      return this.$v.user.houseNumber.$invalid;
     },
     isCepInvalid() {
       return this.$v.user.cep.$invalid;
@@ -440,6 +458,7 @@ export default {
           return value < new Date().toLocaleString();
         },
       },
+      genre: {},
       email: {
         required,
         email,
@@ -453,7 +472,7 @@ export default {
       },
       professionalOccupation: {},
       address: {},
-      addressNumber: {},
+      houseNumber: {},
       cep: {
         numeric,
         length(value) {

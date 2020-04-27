@@ -94,10 +94,11 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 import { required, minLength, sameAs } from 'vuelidate/lib/validators';
-import types from '../../../../store/types';
-import AlertError from '../../../../components/shared/alert/Error';
-import AlertSuccess from '../../../../components/shared/alert/Success';
-import dateUtils from '../../../../utils/date';
+import types from '../../../store/types';
+import AlertError from '../../../components/shared/alert/Error';
+import AlertSuccess from '../../../components/shared/alert/Success';
+import dateUtils from '../../../utils/date';
+import Role from '../../../shared/enums/role';
 
 export default {
   components: {
@@ -151,22 +152,22 @@ export default {
         lastName: this.user.lastName,
         cpf: this.user.cpf,
         birthDate: dateUtils.toString(this.user.birthDate),
+        genre: this.user.genre,
         phoneNumber: this.user.phoneNumber,
         email: this.user.email,
         address: this.user.address,
-        addressNumber: this.user.addressNumber,
+        houseNumber: this.user.houseNumber,
         cep: this.user.cep,
         city: this.user.city,
         state: this.user.state,
         professionalOccupation: this.user.professionalOccupation,
         password: this.password,
-        role: 'PACIENTE',
+        role: Role.PACIENTE,
       };
 
       this.$axios
         .post('/api/users', user)
         .then(() => {
-          this.setUser(null);
           this.$refs.alertSuccess.open();
         })
         .catch(() => {
@@ -174,6 +175,7 @@ export default {
         });
     },
     goToLogin() {
+      this.setUser(null);
       this.$router.push('/login');
     },
   },

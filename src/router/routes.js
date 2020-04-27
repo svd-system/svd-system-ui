@@ -1,9 +1,9 @@
 import MainLayout from '../layouts/MainLayout';
 import Index from '../pages/Index';
-import Login from '../pages/user/Login';
-import Registration from '../pages/user/registration/Registration';
-import RegistrationDataForm from '../pages/user/registration/steps/DataForm';
-import RegistrationPasswordForm from '../pages/user/registration/steps/PasswordForm';
+import Login from '../pages/login/Login';
+import Registration from '../pages/registration/Registration';
+import UserDataRegistrationForm from '../pages/registration/forms/UserData';
+import PasswordRegistrationForm from '../pages/registration/forms/Password';
 
 const routes = [
   {
@@ -24,11 +24,11 @@ const routes = [
             children: [
               {
                 path: '',
-                component: RegistrationDataForm,
+                component: UserDataRegistrationForm,
               },
               {
                 path: 'password',
-                component: RegistrationPasswordForm,
+                component: PasswordRegistrationForm,
               },
             ],
           },
