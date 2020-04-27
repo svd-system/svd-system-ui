@@ -174,7 +174,7 @@
             <q-input
               class="col-8"
               outlined
-              label="Endereço"
+              label="Logradouro"
               stack-label
               :dense="true"
               v-model="user.address"
@@ -186,8 +186,8 @@
               label="Número"
               stack-label
               :dense="true"
-              v-model="user.addressNumber"
-              :error="isAddressNumberInvalid"
+              v-model="user.houseNumber"
+              :error="isHouseNumberInvalid"
             />
           </div>
           <div class="row col-6">
@@ -284,7 +284,7 @@ export default {
         phoneNumber: '',
         professionalOccupation: '',
         address: '',
-        addressNumber: '',
+        houseNumber: '',
         cep: '',
         city: '',
         state: '',
@@ -347,8 +347,8 @@ export default {
     isAddressInvalid() {
       return this.$v.user.address.$invalid;
     },
-    isAddressNumberInvalid() {
-      return this.$v.user.addressNumber.$invalid;
+    isHouseNumberInvalid() {
+      return this.$v.user.houseNumber.$invalid;
     },
     isCepInvalid() {
       return this.$v.user.cep.$invalid;
@@ -453,7 +453,7 @@ export default {
       },
       professionalOccupation: {},
       address: {},
-      addressNumber: {},
+      houseNumber: {},
       cep: {
         numeric,
         length(value) {

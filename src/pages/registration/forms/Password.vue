@@ -154,7 +154,7 @@ export default {
         phoneNumber: this.user.phoneNumber,
         email: this.user.email,
         address: this.user.address,
-        addressNumber: this.user.addressNumber,
+        houseNumber: this.user.houseNumber,
         cep: this.user.cep,
         city: this.user.city,
         state: this.user.state,
