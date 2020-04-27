@@ -98,6 +98,7 @@ import types from '../../../store/types';
 import AlertError from '../../../components/shared/alert/Error';
 import AlertSuccess from '../../../components/shared/alert/Success';
 import dateUtils from '../../../utils/date';
+import Role from '../../../shared/enums/role';
 
 export default {
   components: {
@@ -151,7 +152,7 @@ export default {
         lastName: this.user.lastName,
         cpf: this.user.cpf,
         birthDate: dateUtils.toString(this.user.birthDate),
-        genre: this.user.genre.value,
+        genre: this.user.genre,
         phoneNumber: this.user.phoneNumber,
         email: this.user.email,
         address: this.user.address,
@@ -161,7 +162,7 @@ export default {
         state: this.user.state,
         professionalOccupation: this.user.professionalOccupation,
         password: this.password,
-        role: 'PACIENTE',
+        role: Role.PACIENTE,
       };
 
       this.$axios

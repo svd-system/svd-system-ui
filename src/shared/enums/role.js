@@ -1,0 +1,7 @@
+const Role = {
+  PACIENTE: 'PACIENTE',
+  COLABORADOR: 'COLABORADOR',
+  ADMINISTRADOR: 'ADMINISTRADOR',
+};
+
+export default Role;

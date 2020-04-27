@@ -276,15 +276,16 @@ import {
   helpers,
 } from 'vuelidate/lib/validators';
 import types from '../../../store/types';
-import dateUtils from '../../../utils/date';
+import dateUtils from '../../../shared/utils/date';
+import Genre from '../../../shared/enums/genre';
 
 export default {
   data() {
     return {
       options: [
-        { label: '', value: '' },
-        { label: 'Feminino', value: 'FEMININO' },
-        { label: 'Masculino', value: 'MASCULINO' },
+        '',
+        Genre.FEMININO,
+        Genre.MASCULINO,
       ],
       dateUtils,
       confirmEmail: '',
