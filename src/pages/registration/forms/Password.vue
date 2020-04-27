@@ -151,6 +151,7 @@ export default {
         lastName: this.user.lastName,
         cpf: this.user.cpf,
         birthDate: dateUtils.toString(this.user.birthDate),
+        genre: this.user.genre.value,
         phoneNumber: this.user.phoneNumber,
         email: this.user.email,
         address: this.user.address,

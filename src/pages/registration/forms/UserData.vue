@@ -54,9 +54,7 @@
                 <p v-else-if="!isOkCpfNumeric">
                   * Somente números.
                 </p>
-                <p
-                  v-else-if="!isOkCpfLength"
-                >
+                <p v-else-if="!isOkCpfLength">
                   * CPF possui 11 dígitos.
                 </p>
                 <p v-else-if="!isOkCpfUnique">
@@ -65,7 +63,7 @@
               </template>
             </q-input>
             <q-input
-              class="col col-xs-5 col-lg-3"
+              class="col col-xs-5 col-lg-4"
               outlined
               label="Data de nascimento"
               stack-label
@@ -98,6 +96,16 @@
                 </q-icon>
               </template>
             </q-input>
+            <q-select
+              class="col"
+              label="Sexo"
+              stack-label
+              outlined
+              v-model="user.genre"
+              :options="options"
+              :dense="true"
+              :error="isGenreInvalid"
+            />
           </div>
           <div class="row">
             <q-input
@@ -273,6 +281,11 @@ import dateUtils from '../../../utils/date';
 export default {
   data() {
     return {
+      options: [
+        { label: '', value: '' },
+        { label: 'Feminino', value: 'FEMININO' },
+        { label: 'Masculino', value: 'MASCULINO' },
+      ],
       dateUtils,
       confirmEmail: '',
       user: {
@@ -280,6 +293,7 @@ export default {
         lastName: '',
         cpf: '',
         birthDate: '',
+        genre: '',
         email: '',
         phoneNumber: '',
         professionalOccupation: '',
@@ -331,6 +345,9 @@ export default {
     },
     isBirthDateInvalid() {
       return this.$v.user.birthDate.$invalid;
+    },
+    isGenreInvalid() {
+      return this.$v.user.genre.$invalid;
     },
     isEmailInvalid() {
       return this.$v.user.email.$invalid;
@@ -440,6 +457,7 @@ export default {
           return value < new Date().toLocaleString();
         },
       },
+      genre: {},
       email: {
         required,
         email,
