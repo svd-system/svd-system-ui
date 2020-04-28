@@ -4,6 +4,7 @@ import Login from '../pages/login/Login';
 import Registration from '../pages/registration/Registration';
 import UserDataRegistrationForm from '../pages/registration/forms/UserData';
 import PasswordRegistrationForm from '../pages/registration/forms/Password';
+import Homepage from '../pages/home/Homepage';
 
 const routes = [
   {
@@ -15,11 +16,11 @@ const routes = [
         component: Index,
         children: [
           {
-            path: '/login',
+            path: 'login',
             component: Login,
           },
           {
-            path: '/register',
+            path: 'register',
             component: Registration,
             children: [
               {
@@ -33,8 +34,12 @@ const routes = [
             ],
           },
           {
+            path: 'home',
+            component: Homepage,
+          },
+          {
             path: '*',
-            redirect: '/login',
+            redirect: 'home',
           },
         ],
       },
