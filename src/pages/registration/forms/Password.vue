@@ -97,7 +97,7 @@ import { required, minLength, sameAs } from 'vuelidate/lib/validators';
 import types from '../../../store/types';
 import AlertError from '../../../components/shared/alert/Error';
 import AlertSuccess from '../../../components/shared/alert/Success';
-import dateUtils from '../../../utils/date';
+import dateUtils from '../../../shared/utils/date';
 import Role from '../../../shared/enums/role';
 
 export default {
@@ -166,7 +166,7 @@ export default {
       };
 
       this.$axios
-        .post('/api/users', user)
+        .post('/api/userss', user)
         .then(() => {
           this.$refs.alertSuccess.open();
         })
