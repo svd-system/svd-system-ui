@@ -1,6 +1,7 @@
+import Vue from 'vue';
 import MainLayout from '../layouts/MainLayout';
 import Index from '../pages/Index';
-import Login from '../pages/login/Login';
+import Login from '../pages/auth/Login';
 import Registration from '../pages/registration/Registration';
 import UserDataRegistrationForm from '../pages/registration/forms/UserData';
 import PasswordRegistrationForm from '../pages/registration/forms/Password';
@@ -36,6 +37,15 @@ const routes = [
           {
             path: 'home',
             component: Homepage,
+            beforeEnter(to, from, next) {
+              const auth = Vue.cookie.get('auth');
+              if (!auth) {
+                next('login');
+                return;
+              }
+
+              next();
+            },
           },
           {
             path: '*',

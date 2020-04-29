@@ -114,11 +114,16 @@ export default {
     };
   },
   methods: {
+    storeCredentials(credentials) {
+      this.$cookie.set('auth', credentials.auth);
+      this.$cookie.set('token', credentials.token);
+    },
     login() {
       this.errors = [];
       return this.$axios
         .post('/api/login', this.credentials)
-        .then(() => {
+        .then((response) => {
+          this.storeCredentials(response.data);
           this.$router.push('home');
         })
         .catch((err) => {

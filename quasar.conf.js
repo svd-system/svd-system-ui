@@ -19,6 +19,7 @@ module.exports = function (/* ctx */) {
     boot: [
       'axios',
       'vuelidate',
+      'cookie',
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
