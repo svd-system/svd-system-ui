@@ -92,12 +92,14 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import {
   required,
   numeric,
   minLength,
   helpers,
 } from 'vuelidate/lib/validators';
+import types from '../../store/types';
 import AlertError from '../../components/shared/alert/Error';
 
 export default {
@@ -114,10 +116,9 @@ export default {
     };
   },
   methods: {
-    storeCredentials(credentials) {
-      this.$cookie.set('auth', credentials.auth);
-      this.$cookie.set('token', credentials.token);
-    },
+    ...mapActions(types.namespaces.AUTHORIZATION, {
+      storeCredentials: types.actions.STORE_CREDENTIALS,
+    }),
     login() {
       this.errors = [];
       return this.$axios
