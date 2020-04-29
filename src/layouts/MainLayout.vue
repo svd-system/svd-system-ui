@@ -1,15 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="bg-secondary">
-      <q-toolbar>
-        <q-avatar>
-          <img src="~/assets/svd-black-logo.svg" />
-        </q-avatar>
-        <q-toolbar-title class="text-dark svd-title">{{
-          appTitle
-        }}</q-toolbar-title>
-      </q-toolbar>
-    </q-header>
+    <slot name="header"></slot>
     <q-page-container class="bg-primary">
       <router-view />
     </q-page-container>
@@ -17,11 +8,5 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      appTitle: 'SVD System',
-    };
-  },
-};
+export default {};
 </script>

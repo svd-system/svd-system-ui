@@ -166,7 +166,7 @@ export default {
       };
 
       this.$axios
-        .post('/api/users', user)
+        .post('/api/userss', user)
         .then(() => {
           this.$refs.alertSuccess.open();
         })
