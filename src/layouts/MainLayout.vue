@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr lFf">
     <slot name="header"></slot>
     <q-page-container class="bg-primary">
       <router-view />
