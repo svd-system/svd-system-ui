@@ -13,23 +13,31 @@
           >
           </q-avatar>
           <p class="text-dark text-center">
-            JIMI HENDRIX
-            <span class="svd-title">ADMINISTRADOR</span>
+            {{ user.firstName }} {{ user.lastName }}
+            <br />
+            <span class="svd-title">{{ user.role }}</span>
           </p>
         </div>
       </div>
       <div class="col">
-        <q-list class="text-primary">
-
+        <q-list
+          class="text-primary"
+          v-for="(link, index) in links"
+          :key="index"
+        >
           <q-item
-            v-for="(link, index) in links" :key="index"
+            v-if="user.role === link.role"
             clickable
             v-ripple
             :active="activeLink === link.id"
             @click="activeLink = link.id"
             active-class="my-menu-link"
           >
-            <q-item-section>{{ link.label }}</q-item-section>
+            <q-item-section>
+              <router-link tag="div" to="home">
+                {{ link.label }}
+              </router-link>
+            </q-item-section>
           </q-item>
         </q-list>
       </div>
@@ -41,15 +49,18 @@
 export default {
   data() {
     return {
+      user: {
+        id: 14,
+        firstName: 'RICARDO',
+        lastName: 'ROCHA',
+        role: 'ADMINISTRADOR',
+      },
       activeLink: 'vacina',
       links: [
         {
           id: 'vacina',
           label: 'CADASTRO DE VACINAS',
-        },
-        {
-          id: 'usuario',
-          label: 'CADASTRO DE USUÁRIO',
+          role: 'ADMINISTRADOR',
         },
       ],
     };
@@ -58,6 +69,6 @@ export default {
 </script>
 <style>
 .my-menu-link {
-  border-left: 4px solid #1AAE9F;
+  border-left: 4px solid #1aae9f;
 }
 </style>

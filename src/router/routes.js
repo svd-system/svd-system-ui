@@ -6,6 +6,7 @@ import Registration from '../pages/registration/Registration';
 import UserDataRegistrationForm from '../pages/registration/forms/UserData';
 import PasswordRegistrationForm from '../pages/registration/forms/Password';
 import Homepage from '../pages/home/Homepage';
+import Vaccines from '../pages/vaccine/Vaccines';
 
 const routes = [
   {
@@ -46,6 +47,12 @@ const routes = [
 
               next();
             },
+            children: [
+              {
+                path: 'vaccines',
+                component: Vaccines,
+              },
+            ],
           },
           {
             path: '*',
