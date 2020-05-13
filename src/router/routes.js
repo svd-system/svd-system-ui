@@ -7,6 +7,7 @@ import UserDataRegistrationForm from '../pages/registration/forms/UserData';
 import PasswordRegistrationForm from '../pages/registration/forms/Password';
 import Homepage from '../pages/home/Homepage';
 import Vaccines from '../pages/vaccine/Vaccines';
+import Welcome from '../pages/home/Welcome';
 
 const routes = [
   {
@@ -36,7 +37,7 @@ const routes = [
             ],
           },
           {
-            path: 'home',
+            path: 'user',
             component: Homepage,
             beforeEnter(to, from, next) {
               const auth = Vue.cookie.get('auth');
@@ -49,6 +50,10 @@ const routes = [
             },
             children: [
               {
+                path: '',
+                component: Welcome,
+              },
+              {
                 path: 'vaccines',
                 component: Vaccines,
               },
@@ -56,7 +61,7 @@ const routes = [
           },
           {
             path: '*',
-            redirect: 'home',
+            redirect: 'user',
           },
         ],
       },

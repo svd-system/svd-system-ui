@@ -26,23 +26,23 @@
           :key="index"
         >
           <q-item
-            v-if="user.role === link.role"
-            clickable
+            v-if="isEqualsUserRole(link.role)"
+            :clickable="!isActiveLink(link.href)"
             v-ripple
-            :active="activeLink === link.id"
-            @click="activeLink = link.id"
+            :active="isActiveLink(link.href)"
+            @click="goToPath(link.href)"
             active-class="my-menu-link"
           >
             <q-item-section>
-              <router-link tag="div" to="home">
+              <div>
                 {{ link.label }}
-              </router-link>
+              </div>
             </q-item-section>
           </q-item>
         </q-list>
       </div>
     </q-drawer>
-    <h1>Home Page</h1>
+    <router-view></router-view>
   </div>
 </template>
 <script>
@@ -55,15 +55,30 @@ export default {
         lastName: 'ROCHA',
         role: 'ADMINISTRADOR',
       },
-      activeLink: 'vacina',
       links: [
         {
-          id: 'vacina',
+          href: '/user/vaccines',
           label: 'CADASTRO DE VACINAS',
           role: 'ADMINISTRADOR',
         },
       ],
     };
+  },
+  computed: {
+    activeLinkHref() {
+      return this.$route.path;
+    },
+  },
+  methods: {
+    goToPath(link) {
+      this.$router.push(link);
+    },
+    isActiveLink(href) {
+      return this.activeLinkHref === href;
+    },
+    isEqualsUserRole(role) {
+      return this.user.role === role;
+    },
   },
 };
 </script>

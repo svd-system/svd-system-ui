@@ -125,7 +125,7 @@ export default {
         .post('/api/login', this.credentials)
         .then((response) => {
           this.storeCredentials(response.data);
-          this.$router.push('home');
+          this.$router.push('user');
         })
         .catch((err) => {
           this.errors = err.response.data.errors;
