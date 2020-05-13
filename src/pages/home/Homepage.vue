@@ -46,15 +46,13 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
+import types from '../../store/types';
+
 export default {
   data() {
     return {
-      user: {
-        id: 14,
-        firstName: 'RICARDO',
-        lastName: 'ROCHA',
-        role: 'ADMINISTRADOR',
-      },
+      user: {},
       links: [
         {
           href: '/user/vaccines',
@@ -70,6 +68,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions(types.namespaces.AUTHORIZATION, {
+      clearCredentials: types.actions.CLEAR_CREDENTIALS,
+    }),
     goToPath(link) {
       this.$router.push(link);
     },
@@ -79,6 +80,23 @@ export default {
     isEqualsUserRole(role) {
       return this.user.role === role;
     },
+  },
+  created() {
+    const userHref = this.$cookie.get('user');
+    const token = this.$cookie.get('token');
+
+    this.$axios.get(userHref, {
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((user) => {
+        this.user = { ...user.data };
+      })
+      .catch(() => {
+        this.$router.push('/login');
+        this.clearCredentials();
+      });
   },
 };
 </script>
