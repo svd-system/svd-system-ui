@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-card-section class="q-pt-none q-gutter-sm">
-      <router-link to="/login" tag="a">
+      <router-link class="text-primary" to="/login" tag="a">
         Voltar para o login
       </router-link>
       <p class="text-h6 text-dark text-center svd-title">

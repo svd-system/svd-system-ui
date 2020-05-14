@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-card-section class="q-pa-none q-gutter-sm">
-      <router-link to="/register" tag="a">
+      <router-link class="text-primary" to="/register" tag="a">
         Voltar para o cadastro
       </router-link>
       <p class="text-h6 text-dark text-center svd-title">
@@ -166,7 +166,7 @@ export default {
       };
 
       this.$axios
-        .post('/api/userss', user)
+        .post('/api/users', user)
         .then(() => {
           this.$refs.alertSuccess.open();
         })

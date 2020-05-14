@@ -1,7 +1,7 @@
 <template>
   <div id="q-app">
     <router-view>
-      <app-header slot="header" :appTitle="appTitle">
+      <app-header slot="header" elevated :appTitle="appTitle">
         <q-btn
           slot="button"
           flat
