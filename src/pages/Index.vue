@@ -1,12 +1,10 @@
 <template>
-  <q-page class="row justify-center">
-    <div class="q-my-lg col-xs-12 col-sm-10 col-md-8">
+  <q-page class="row">
       <q-page-container class="container">
         <transition name="slide" mode="out-in">
           <router-view></router-view>
         </transition>
       </q-page-container>
-    </div>
   </q-page>
 </template>
 

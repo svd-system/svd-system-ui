@@ -8,6 +8,7 @@ import PasswordRegistrationForm from '../pages/registration/forms/Password';
 import Homepage from '../pages/home/Homepage';
 import Vaccines from '../pages/vaccine/Vaccines';
 import Welcome from '../pages/home/Welcome';
+import Patients from '../pages/patients/Patients';
 
 const routes = [
   {
@@ -56,6 +57,10 @@ const routes = [
               {
                 path: 'vaccines',
                 component: Vaccines,
+              },
+              {
+                path: 'patients',
+                component: Patients,
               },
             ],
           },

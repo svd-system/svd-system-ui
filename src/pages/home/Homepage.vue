@@ -26,7 +26,7 @@
           :key="index"
         >
           <q-item
-            v-if="isEqualsUserRole(link.role)"
+            v-if="isEqualsUserRole(link.roles)"
             :clickable="!isActiveLink(link.href)"
             v-ripple
             :active="isActiveLink(link.href)"
@@ -57,7 +57,17 @@ export default {
         {
           href: '/user/vaccines',
           label: 'CADASTRO DE VACINAS',
-          role: 'ADMINISTRADOR',
+          roles: [
+            'ADMINISTRADOR',
+          ],
+        },
+        {
+          href: '/user/patients',
+          label: 'PACIENTES',
+          roles: [
+            'ADMINISTRADOR',
+            'COLABORADOR',
+          ],
         },
       ],
     };
@@ -77,8 +87,8 @@ export default {
     isActiveLink(href) {
       return this.activeLinkHref === href;
     },
-    isEqualsUserRole(role) {
-      return this.user.role === role;
+    isEqualsUserRole(roles) {
+      return roles.includes(this.user.role);
     },
   },
   created() {
