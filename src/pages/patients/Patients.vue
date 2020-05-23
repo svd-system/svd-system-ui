@@ -31,6 +31,13 @@
           hide-bottom
           flat
         >
+          <template v-slot:header="props">
+            <q-tr :props="props">
+              <q-th v-for="col in props.cols" :key="col.name" :props="props">
+                <div v-if="!col.hide">{{ col.label }}</div>
+              </q-th>
+            </q-tr>
+          </template>
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td key="cpf" :props="props">
@@ -42,12 +49,16 @@
               <q-td key="role" :props="props">
                 {{ props.row.role }}
               </q-td>
-              <q-td v-if="user.role === 'ADMINISTRADOR'" key="active" :props="props">
+              <q-td v-if="isUserAdministrator" key="active" :props="props">
                 <q-checkbox
                   v-if="true"
                   v-model="props.row.active"
                   color="accent"
                 />
+              </q-td>
+
+              <q-td v-if="isUserAdministrator" key="edit" :props="props">
+                <q-icon name="edit" size="sm" />
               </q-td>
             </q-tr>
           </template>
@@ -62,11 +73,31 @@ export default {
   data() {
     return {
       user: {
-        role: 'PACIENTE',
+        role: 'ADMINISTRADOR',
       },
       query: '',
       activeOnly: false,
-      columns: [
+      patients: [
+        {
+          cpf: '123.321.456-65',
+          firstName: 'Ricardo',
+          lastName: 'Rocha',
+          role: 'PACIENTE',
+          active: true,
+        },
+        {
+          cpf: '321.123.231-70',
+          firstName: 'Lionel',
+          lastName: 'Messi',
+          role: 'PACIENTE',
+          active: false,
+        },
+      ],
+    };
+  },
+  computed: {
+    columns() {
+      const allColumns = [
         {
           name: 'cpf',
           label: 'CPF',
@@ -91,24 +122,18 @@ export default {
           align: 'left',
           field: (patient) => patient.active,
         },
-      ],
-      patients: [
         {
-          cpf: '123.321.456-65',
-          firstName: 'Ricardo',
-          lastName: 'Rocha',
-          role: 'PACIENTE',
-          active: true,
+          name: 'edit',
+          label: '',
+          align: 'center',
         },
-        {
-          cpf: '321.123.231-70',
-          firstName: 'Lionel',
-          lastName: 'Messi',
-          role: 'PACIENTE',
-          active: false,
-        },
-      ],
-    };
+      ];
+
+      return this.isUserAdministrator ? allColumns : allColumns.slice(0, 3);
+    },
+    isUserAdministrator() {
+      return this.user.role === 'ADMINISTRADOR';
+    },
   },
 };
 </script>
