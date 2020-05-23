@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <q-card class="q-pa-xl col col-6">
+  <div class="row q-md-auto">
+    <q-card class="q-pa-xl col col-12">
       <transition name="slide-fade" mode="out-in">
         <keep-alive>
           <router-view></router-view>

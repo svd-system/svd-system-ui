@@ -1,14 +1,15 @@
 import Vue from 'vue';
 import MainLayout from '../layouts/MainLayout';
 import Index from '../pages/Index';
-import Login from '../pages/auth/Login';
-import Registration from '../pages/registration/Registration';
-import UserDataRegistrationForm from '../pages/registration/forms/UserData';
-import PasswordRegistrationForm from '../pages/registration/forms/Password';
+import Login from '../pages/account/auth/Login';
+import Registration from '../pages/account/registration/Registration';
+import UserDataRegistrationForm from '../pages/account/registration/forms/UserData';
+import PasswordRegistrationForm from '../pages/account/registration/forms/Password';
 import Homepage from '../pages/home/Homepage';
 import Vaccines from '../pages/vaccine/Vaccines';
 import Welcome from '../pages/home/Welcome';
 import Patients from '../pages/patients/Patients';
+import AccountIndex from '../pages/account/Index';
 
 const routes = [
   {
@@ -16,34 +17,16 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: '',
+        path: 'user',
         component: Index,
         children: [
           {
-            path: 'login',
-            component: Login,
-          },
-          {
-            path: 'register',
-            component: Registration,
-            children: [
-              {
-                path: '',
-                component: UserDataRegistrationForm,
-              },
-              {
-                path: 'password',
-                component: PasswordRegistrationForm,
-              },
-            ],
-          },
-          {
-            path: 'user',
+            path: '',
             component: Homepage,
             beforeEnter(to, from, next) {
               const auth = Vue.cookie.get('auth');
               if (!auth) {
-                next('login');
+                next('/account/login');
                 return;
               }
 
@@ -64,11 +47,36 @@ const routes = [
               },
             ],
           },
+        ],
+      },
+      {
+        path: 'account',
+        component: AccountIndex,
+        redirect: 'user',
+        children: [
           {
-            path: '*',
-            redirect: 'user',
+            path: 'login',
+            component: Login,
+          },
+          {
+            path: 'register',
+            component: Registration,
+            children: [
+              {
+                path: '',
+                component: UserDataRegistrationForm,
+              },
+              {
+                path: 'password',
+                component: PasswordRegistrationForm,
+              },
+            ],
           },
         ],
+      },
+      {
+        path: '*',
+        redirect: 'account/login',
       },
     ],
   },

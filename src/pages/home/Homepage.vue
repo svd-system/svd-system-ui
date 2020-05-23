@@ -42,7 +42,9 @@
         </q-list>
       </div>
     </q-drawer>
-    <router-view></router-view>
+    <transition name="slide" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 <script>
@@ -57,17 +59,12 @@ export default {
         {
           href: '/user/vaccines',
           label: 'CADASTRO DE VACINAS',
-          roles: [
-            'ADMINISTRADOR',
-          ],
+          roles: ['ADMINISTRADOR'],
         },
         {
           href: '/user/patients',
           label: 'PACIENTES',
-          roles: [
-            'ADMINISTRADOR',
-            'COLABORADOR',
-          ],
+          roles: ['ADMINISTRADOR', 'COLABORADOR'],
         },
       ],
     };
@@ -95,16 +92,17 @@ export default {
     const userHref = this.$cookie.get('user');
     const token = this.$cookie.get('token');
 
-    this.$axios.get(userHref, {
-      headers: {
-        Authorization: token,
-      },
-    })
+    this.$axios
+      .get(userHref, {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((user) => {
         this.user = { ...user.data };
       })
       .catch(() => {
-        this.$router.push('/login');
+        this.$router.push('/account/login');
         this.clearCredentials();
       });
   },
