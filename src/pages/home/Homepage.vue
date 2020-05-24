@@ -90,14 +90,8 @@ export default {
   },
   created() {
     const userHref = this.$cookie.get('user');
-    const token = this.$cookie.get('token');
-
     this.$axios
-      .get(userHref, {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .get(userHref)
       .then((user) => {
         this.user = { ...user.data };
       })

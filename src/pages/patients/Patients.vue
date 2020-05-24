@@ -73,13 +73,8 @@
 export default {
   created() {
     this.activeOnly = !this.isUserAdministrator;
-    const token = this.$cookie.get('token');
     this.$axios
-      .get(`/api/users?excludeId=${this.user.id}&activeOnly=${this.activeOnly}`, {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .get(`/api/users?excludeId=${this.user.id}&activeOnly=${this.activeOnly}`)
       .then((response) => {
         this.patients = response.data;
       });
