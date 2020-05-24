@@ -12,12 +12,14 @@
                 stack-label
                 :dense="true"
                 v-model="query"
+                @keyup="findAllPatients"
               />
               <q-checkbox
-                v-if="true"
+                v-if="isUserAdministrator"
                 v-model="activeOnly"
                 color="accent"
                 label="ATIVO"
+                @click.native="findAllPatients"
               />
             </div>
           </div>
@@ -50,11 +52,7 @@
                 {{ props.row.role }}
               </q-td>
               <q-td v-if="isUserAdministrator" key="active" :props="props">
-                <q-checkbox
-                  v-if="true"
-                  v-model="props.row.active"
-                  color="accent"
-                />
+                <q-checkbox v-model="props.row.active" color="accent" />
               </q-td>
 
               <q-td v-if="isUserAdministrator" key="edit" :props="props">
@@ -63,6 +61,9 @@
             </q-tr>
           </template>
         </q-table>
+        <div v-if="patients.length < 1" class="q-my-lg text-center svd-title">
+          Nenhum paciente encontrado
+        </div>
       </q-card-section>
     </q-card>
   </div>
@@ -70,29 +71,28 @@
 
 <script>
 export default {
+  created() {
+    this.activeOnly = !this.isUserAdministrator;
+    const token = this.$cookie.get('token');
+    this.$axios
+      .get(`/api/users?excludeId=${this.user.id}&activeOnly=${this.activeOnly}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((response) => {
+        this.patients = response.data;
+      });
+  },
   data() {
     return {
       user: {
+        id: 14,
         role: 'ADMINISTRADOR',
       },
       query: '',
       activeOnly: false,
-      patients: [
-        {
-          cpf: '123.321.456-65',
-          firstName: 'Ricardo',
-          lastName: 'Rocha',
-          role: 'PACIENTE',
-          active: true,
-        },
-        {
-          cpf: '321.123.231-70',
-          firstName: 'Lionel',
-          lastName: 'Messi',
-          role: 'PACIENTE',
-          active: false,
-        },
-      ],
+      patients: [],
     };
   },
   computed: {
@@ -133,6 +133,25 @@ export default {
     },
     isUserAdministrator() {
       return this.user.role === 'ADMINISTRADOR';
+    },
+  },
+  methods: {
+    findAllPatients() {
+      const token = this.$cookie.get('token');
+      let url = `/api/users?excludeId=${this.user.id}&activeOnly=${this.activeOnly}`;
+      if (this.query) {
+        url += `&query=${this.query}`;
+      }
+
+      this.$axios
+        .get(url, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((response) => {
+          this.patients = response.data;
+        });
     },
   },
 };
