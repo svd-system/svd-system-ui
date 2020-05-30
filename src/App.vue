@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import types from './store/types';
 import AppHeader from './components/shared/header/Header';
 
@@ -32,8 +32,12 @@ export default {
     ...mapActions(types.namespaces.AUTHORIZATION, {
       clearCredentials: types.actions.CLEAR_CREDENTIALS,
     }),
+    ...mapMutations(types.namespaces.AUTHORIZATION, {
+      setUser: types.mutations.SET_USER,
+    }),
     logout() {
       this.clearCredentials();
+      this.setUser(null);
       this.$router.push('login');
     },
   },

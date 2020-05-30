@@ -167,7 +167,6 @@ export default {
     },
   },
   mounted() {
-    this.user = this.getAuthorizedUser();
     this.activeOnly = !this.isUserAdministrator;
     this.$axios
       .get(`/api/users?excludeId=${this.user.id}&activeOnly=${this.activeOnly}`)

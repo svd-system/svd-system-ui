@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-drawer show-if-above :width="250" elevated content-class="text-white">
+    <q-drawer v-if="user" show-if-above :width="250" elevated content-class="text-white">
       <div class="col">
         <div class="col q-ma-lg">
           <q-avatar
@@ -92,6 +92,12 @@ export default {
     isEqualsUserRole(roles) {
       return roles.includes(this.user.role);
     },
+  },
+  mounted() {
+    const link = this.links.find((el) => this.isEqualsUserRole(el.roles));
+    if (link) {
+      this.goToPath(link.href);
+    }
   },
 };
 </script>
