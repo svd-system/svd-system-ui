@@ -12,7 +12,7 @@
 export default {};
 </script>
 
-<style>
+<style scoped>
 .container {
   min-width: 750px;
 }

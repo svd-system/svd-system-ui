@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-card class="q-pa-xl container">
+    <q-card class="q-pa-xl min">
       <q-card-section>
         <q-form class="row justify-center">
           <div class="col col-12 q-col-gutter-sm">
@@ -42,7 +42,7 @@
             </q-tr>
           </template>
           <template v-slot:body="props">
-            <q-tr :props="props">
+            <q-tr :props="props" @click="goToPatient(props.row.id)">
               <q-td key="cpf" :props="props">
                 {{ props.row.cpf }}
               </q-td>
@@ -56,6 +56,7 @@
                   :options="roleOptions"
                   :dense="true"
                   @input="update(props.row)"
+                  @click.native="$event.stopPropagation()"
                 />
               </q-td>
               <q-td key="active" :props="props">
@@ -66,7 +67,7 @@
                 />
               </q-td>
               <q-td key="edit" :props="props">
-                <q-btn flat round @click="edit(props.row.id)">
+                <q-btn flat round @click.stop="edit(props.row.id)">
                  <q-icon clickable name="edit" size="sm" />
                 </q-btn>
               </q-td>
@@ -167,6 +168,9 @@ export default {
     isEqualsUserRole(roles) {
       return this.user && roles.includes(this.user.role);
     },
+    goToPatient(patientId) {
+      this.$router.push(`/user/patients/${patientId}`);
+    },
     edit(patientId) {
       this.$router.push(`/user/patients/${patientId}/edit`);
     },
@@ -182,8 +186,8 @@ export default {
 };
 </script>
 <style>
-.container {
-  min-width: 80%;
+.min {
+  min-width: 650px;
 }
 .select {
   width: 150px;
