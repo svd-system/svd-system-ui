@@ -66,7 +66,9 @@
                 />
               </q-td>
               <q-td key="edit" :props="props">
-                <q-icon name="edit" size="sm" />
+                <q-btn flat round @click="edit(props.row.id)">
+                 <q-icon clickable name="edit" size="sm" />
+                </q-btn>
               </q-td>
             </q-tr>
           </template>
@@ -164,6 +166,9 @@ export default {
     },
     isEqualsUserRole(roles) {
       return this.user && roles.includes(this.user.role);
+    },
+    edit(patientId) {
+      this.$router.push(`/user/patients/${patientId}/edit`);
     },
   },
   mounted() {

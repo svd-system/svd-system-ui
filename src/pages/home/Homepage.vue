@@ -87,7 +87,7 @@ export default {
       this.$router.push(link);
     },
     isActiveLink(href) {
-      return this.activeLinkHref === href;
+      return this.activeLinkHref.startsWith(href);
     },
     isEqualsUserRole(roles) {
       return roles.includes(this.user.role);
