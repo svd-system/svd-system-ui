@@ -29,6 +29,7 @@
         <q-table
           :data="patients"
           :columns="columns"
+          :visible-columns="visibleColumns"
           row-key="cpf"
           hide-bottom
           flat
@@ -36,7 +37,7 @@
           <template v-slot:header="props">
             <q-tr :props="props">
               <q-th v-for="col in props.cols" :key="col.name" :props="props">
-                <div v-if="!col.hide">{{ col.label }}</div>
+                <div>{{ col.label }}</div>
               </q-th>
             </q-tr>
           </template>
@@ -48,20 +49,32 @@
               <q-td key="name" :props="props">
                 {{ props.row.firstName }} {{ props.row.lastName }}
               </q-td>
-              <q-td key="role" :props="props">
-                {{ props.row.role }}
+              <q-td key="role" :props="props" class="select">
+                <q-select
+                  borderless
+                  v-model="props.row.role"
+                  :options="roleOptions"
+                  :dense="true"
+                  @input="update(props.row)"
+                />
               </q-td>
-              <q-td v-if="isUserAdministrator" key="active" :props="props">
-                <q-checkbox v-model="props.row.active" color="accent" />
+              <q-td key="active" :props="props">
+                <q-checkbox
+                  v-model="props.row.active"
+                  @click.native="update(props.row)"
+                  color="accent"
+                />
               </q-td>
-
-              <q-td v-if="isUserAdministrator" key="edit" :props="props">
+              <q-td key="edit" :props="props">
                 <q-icon name="edit" size="sm" />
               </q-td>
             </q-tr>
           </template>
         </q-table>
-        <div v-if="patients.length < 1" class="q-my-lg text-center svd-title">
+        <div
+          v-if="patients && patients.length < 1"
+          class="q-my-lg text-center svd-title"
+        >
           Nenhum paciente encontrado
         </div>
       </q-card-section>
@@ -70,8 +83,91 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import types from '../../store/types';
+
 export default {
-  created() {
+  data() {
+    return {
+      patients: [],
+      query: '',
+      activeOnly: false,
+      roleOptions: ['PACIENTE', 'COLABORADOR', 'ADMINISTRADOR'],
+    };
+  },
+  computed: {
+    ...mapGetters(types.namespaces.AUTHORIZATION, {
+      user: types.getters.GET_USER,
+    }),
+    columns() {
+      return [
+        {
+          name: 'cpf',
+          label: 'CPF',
+          align: 'left',
+          field: (patient) => patient.cpf,
+          roles: ['ADMINISTRADOR', 'COLABORADOR'],
+        },
+        {
+          name: 'name',
+          label: 'NOME COMPLETO',
+          align: 'left',
+          field: (patient) => `${patient.firstName} ${patient.lastName}`,
+          roles: ['ADMINISTRADOR', 'COLABORADOR'],
+        },
+        {
+          name: 'role',
+          label: 'PERFIL',
+          align: 'left',
+          field: (patient) => patient.role,
+          roles: ['ADMINISTRADOR'],
+        },
+        {
+          name: 'active',
+          label: 'ATIVO',
+          field: (patient) => patient.active,
+          roles: ['ADMINISTRADOR'],
+        },
+        {
+          name: 'edit',
+          label: '',
+          roles: ['ADMINISTRADOR', 'COLABORADOR'],
+        },
+      ];
+    },
+    isUserAdministrator() {
+      return this.user && this.user.role === 'ADMINISTRADOR';
+    },
+    visibleColumns() {
+      const allColumns = [
+        'cpf', 'name', 'edit', 'role', 'active',
+      ];
+      return this.isUserAdministrator ? allColumns : allColumns.slice(0, 3);
+    },
+  },
+  methods: {
+    ...mapGetters(types.namespaces.AUTHORIZATION, {
+      getAuthorizedUser: types.getters.GET_USER,
+    }),
+    findAllPatients() {
+      let url = `/api/users?excludeId=${this.user.id}&activeOnly=${this.activeOnly}`;
+      if (this.query) {
+        url += `&query=${this.query}`;
+      }
+
+      this.$axios.get(url).then((response) => {
+        this.patients = response.data;
+      });
+    },
+    update(user) {
+      this.$axios.put(`/api/users/${user.id}`, user);
+    },
+    isEqualsUserRole(roles) {
+      return this.user && roles.includes(this.user.role);
+    },
+  },
+  mounted() {
+    this.user = this.getAuthorizedUser();
     this.activeOnly = !this.isUserAdministrator;
     this.$axios
       .get(`/api/users?excludeId=${this.user.id}&activeOnly=${this.activeOnly}`)
@@ -79,80 +175,13 @@ export default {
         this.patients = response.data;
       });
   },
-  data() {
-    return {
-      user: {
-        id: 14,
-        role: 'ADMINISTRADOR',
-      },
-      query: '',
-      activeOnly: false,
-      patients: [],
-    };
-  },
-  computed: {
-    columns() {
-      const allColumns = [
-        {
-          name: 'cpf',
-          label: 'CPF',
-          align: 'left',
-          field: (patient) => patient.cpf,
-        },
-        {
-          name: 'name',
-          label: 'NOME COMPLETO',
-          align: 'left',
-          field: (patient) => `${patient.firstName} ${patient.lastName}`,
-        },
-        {
-          name: 'role',
-          label: 'PERFIL',
-          align: 'left',
-          field: (patient) => patient.role,
-        },
-        {
-          name: 'active',
-          label: 'ATIVO',
-          align: 'left',
-          field: (patient) => patient.active,
-        },
-        {
-          name: 'edit',
-          label: '',
-          align: 'center',
-        },
-      ];
-
-      return this.isUserAdministrator ? allColumns : allColumns.slice(0, 3);
-    },
-    isUserAdministrator() {
-      return this.user.role === 'ADMINISTRADOR';
-    },
-  },
-  methods: {
-    findAllPatients() {
-      const token = this.$cookie.get('token');
-      let url = `/api/users?excludeId=${this.user.id}&activeOnly=${this.activeOnly}`;
-      if (this.query) {
-        url += `&query=${this.query}`;
-      }
-
-      this.$axios
-        .get(url, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((response) => {
-          this.patients = response.data;
-        });
-    },
-  },
 };
 </script>
 <style>
 .container {
   min-width: 80%;
+}
+.select {
+  width: 150px;
 }
 </style>

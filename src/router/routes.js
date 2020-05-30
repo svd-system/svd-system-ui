@@ -11,6 +11,9 @@ import Welcome from '../pages/home/Welcome';
 import Patients from '../pages/patients/Patients';
 import AccountIndex from '../pages/account/Index';
 
+import store from '../store';
+import types from '../store/types';
+
 const routes = [
   {
     path: '',
@@ -30,7 +33,10 @@ const routes = [
                 return;
               }
 
-              next();
+              store.dispatch(`auth/${types.actions.LOAD_AUTHORIZED_USER}`)
+                .then(() => {
+                  next();
+                });
             },
             children: [
               {

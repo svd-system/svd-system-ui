@@ -48,13 +48,12 @@
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 import types from '../../store/types';
 
 export default {
   data() {
     return {
-      user: {},
       links: [
         {
           href: '/user/vaccines',
@@ -70,6 +69,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(types.namespaces.AUTHORIZATION, {
+      user: types.getters.GET_USER,
+    }),
     activeLinkHref() {
       return this.$route.path;
     },
@@ -77,6 +79,9 @@ export default {
   methods: {
     ...mapActions(types.namespaces.AUTHORIZATION, {
       clearCredentials: types.actions.CLEAR_CREDENTIALS,
+    }),
+    ...mapMutations(types.namespaces.AUTHORIZATION, {
+      setAuthorizedUser: types.mutations.SET_USER,
     }),
     goToPath(link) {
       this.$router.push(link);
@@ -87,18 +92,6 @@ export default {
     isEqualsUserRole(roles) {
       return roles.includes(this.user.role);
     },
-  },
-  created() {
-    const userHref = this.$cookie.get('user');
-    this.$axios
-      .get(userHref)
-      .then((user) => {
-        this.user = { ...user.data };
-      })
-      .catch(() => {
-        this.$router.push('/account/login');
-        this.clearCredentials();
-      });
   },
 };
 </script>
