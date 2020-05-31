@@ -134,27 +134,6 @@
               </template>
             </q-input>
           </div>
-          <div class="row">
-            <q-input
-              class="col"
-              outlined
-              label="Confirmar email"
-              stack-label
-              :disabled="isEmailInvalid"
-              :dense="true"
-              v-model="confirmEmail"
-              :error="isConfirmEmailInvalid"
-            >
-              <template v-slot:error>
-                <p v-if="!isOkConfirmEmailRequired">
-                  * Confirmar email é obrigatorio.
-                </p>
-                <p v-else-if="!isOkConfirmEmailSameAsEmail">
-                  * Emails informados não conferem.
-                </p>
-              </template>
-            </q-input>
-          </div>
           <div class="row wrap q-gutter-sm">
             <q-input
               class="col col-4"
@@ -293,7 +272,6 @@ export default {
         Genre.MASCULINO,
       ],
       dateUtils,
-      confirmEmail: '',
       user: {
         firstName: '',
         lastName: '',
@@ -414,12 +392,6 @@ export default {
     isOkEmailUnique() {
       return this.$v.user.email.unique;
     },
-    isOkConfirmEmailRequired() {
-      return this.$v.confirmEmail.required;
-    },
-    isOkConfirmEmailSameAsEmail() {
-      return this.$v.confirmEmail.sameAsEmail;
-    },
     isOkPhoneNumberRequired() {
       return this.$v.user.phoneNumber.required;
     },
@@ -498,12 +470,6 @@ export default {
         length(value) {
           return !value || this.checkLength(value, 2);
         },
-      },
-    },
-    confirmEmail: {
-      required,
-      sameAsEmail(value) {
-        return value && value === this.user.email;
       },
     },
   },
