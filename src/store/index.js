@@ -15,17 +15,15 @@ Vue.use(Vuex);
  * with the Store instance.
  */
 
-export default function (/* { ssrContext } */) {
-  const Store = new Vuex.Store({
-    modules: {
-      registration,
-      auth,
-    },
+const store = new Vuex.Store({
+  modules: {
+    registration,
+    auth,
+  },
 
-    // enable strict mode (adds overhead!)
-    // for dev mode only
-    strict: process.env.DEV,
-  });
+  // enable strict mode (adds overhead!)
+  // for dev mode only
+  strict: process.env.DEV,
+});
 
-  return Store;
-}
+export default store;

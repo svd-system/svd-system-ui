@@ -65,7 +65,7 @@
           <div class="row justify-center">
             <p class="text-center text-dark">
               Não possui conta?
-              <router-link to="/register" tag="a" class="text-primary"
+              <router-link to="/account/register" tag="a" class="text-primary"
                 >Cadastre-se</router-link
               >
             </p>
@@ -74,7 +74,7 @@
       </q-card-actions>
     </q-card>
     <div class="q-mx-xl q-mt-xl col">
-      <q-img class="logo" src="../../assets/svd-white-logo.svg" />
+      <q-img class="logo" src="../../../assets/svd-white-logo.svg" />
     </div>
     <alert-error ref="alertError">
       <p slot="title">Login falhou!</p>
@@ -99,8 +99,8 @@ import {
   minLength,
   helpers,
 } from 'vuelidate/lib/validators';
-import types from '../../store/types';
-import AlertError from '../../components/shared/alert/Error';
+import types from '../../../store/types';
+import AlertError from '../../../components/shared/alert/Error';
 
 export default {
   components: {
@@ -125,7 +125,7 @@ export default {
         .post('/api/login', this.credentials)
         .then((response) => {
           this.storeCredentials(response.data);
-          this.$router.push('user');
+          this.$router.push('/user');
         })
         .catch((err) => {
           this.errors = err.response.data.errors;

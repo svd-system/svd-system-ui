@@ -1,13 +1,20 @@
 import Vue from 'vue';
 import MainLayout from '../layouts/MainLayout';
 import Index from '../pages/Index';
-import Login from '../pages/auth/Login';
-import Registration from '../pages/registration/Registration';
-import UserDataRegistrationForm from '../pages/registration/forms/UserData';
-import PasswordRegistrationForm from '../pages/registration/forms/Password';
+import Login from '../pages/account/auth/Login';
+import Registration from '../pages/account/registration/Registration';
+import UserDataRegistrationForm from '../pages/account/registration/forms/UserData';
+import PasswordRegistrationForm from '../pages/account/registration/forms/Password';
 import Homepage from '../pages/home/Homepage';
 import Vaccines from '../pages/vaccine/Vaccines';
 import Welcome from '../pages/home/Welcome';
+import Patients from '../pages/patients/Patients';
+import EditPatient from '../pages/patients/EditPatient';
+import PatientRecord from '../pages/patients/PatientRecord';
+import AccountIndex from '../pages/account/Index';
+
+import store from '../store';
+import types from '../store/types';
 
 const routes = [
   {
@@ -15,8 +22,53 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: '',
+        path: 'user',
         component: Index,
+        children: [
+          {
+            path: '',
+            component: Homepage,
+            beforeEnter(to, from, next) {
+              const auth = Vue.cookie.get('auth');
+              if (!auth) {
+                next('/account/login');
+                return;
+              }
+
+              store.dispatch(`auth/${types.actions.LOAD_AUTHORIZED_USER}`)
+                .then(() => {
+                  next();
+                });
+            },
+            children: [
+              {
+                path: '',
+                component: Welcome,
+              },
+              {
+                path: 'vaccines',
+                component: Vaccines,
+              },
+              {
+                path: 'patients',
+                component: Patients,
+              },
+              {
+                path: 'patients/:id',
+                component: PatientRecord,
+              },
+              {
+                path: 'patients/:id/edit',
+                component: EditPatient,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'account',
+        component: AccountIndex,
+        redirect: 'user',
         children: [
           {
             path: 'login',
@@ -36,34 +88,11 @@ const routes = [
               },
             ],
           },
-          {
-            path: 'user',
-            component: Homepage,
-            beforeEnter(to, from, next) {
-              const auth = Vue.cookie.get('auth');
-              if (!auth) {
-                next('login');
-                return;
-              }
-
-              next();
-            },
-            children: [
-              {
-                path: '',
-                component: Welcome,
-              },
-              {
-                path: 'vaccines',
-                component: Vaccines,
-              },
-            ],
-          },
-          {
-            path: '*',
-            redirect: 'user',
-          },
         ],
+      },
+      {
+        path: '*',
+        redirect: 'account/login',
       },
     ],
   },

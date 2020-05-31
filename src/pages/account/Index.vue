@@ -1,5 +1,5 @@
 <template>
-  <q-page class="row">
+  <q-page class="row justify-center">
       <q-page-container class="container">
         <transition name="slide" mode="out-in">
           <router-view></router-view>
@@ -12,8 +12,8 @@
 export default {};
 </script>
 
-<style scoped>
+<style>
 .container {
-  min-width: 750px;
+  min-width: 900px;
 }
 </style>

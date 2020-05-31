@@ -41,7 +41,7 @@
           </div>
           <div class="row wrap q-gutter-sm">
             <q-input
-              class="col col-xs-4 col-md-3 col-lg-2"
+              class="col col-xs-4 col-md-3 col-lg-3"
               outlined
               label="CPF"
               stack-label
@@ -105,7 +105,13 @@
               :options="options"
               :dense="true"
               :error="isGenreInvalid"
-            />
+            >
+              <template v-slot:error>
+                <p v-if="!isOkGenreRequired">
+                  * Sexo é obrigatório.
+                </p>
+              </template>
+            </q-select>
           </div>
           <div class="row">
             <q-input
@@ -124,27 +130,6 @@
                 </p>
                 <p v-else-if="!isOkEmailUnique">
                   * Email já cadastrado.
-                </p>
-              </template>
-            </q-input>
-          </div>
-          <div class="row">
-            <q-input
-              class="col"
-              outlined
-              label="Confirmar email"
-              stack-label
-              :disabled="isEmailInvalid"
-              :dense="true"
-              v-model="confirmEmail"
-              :error="isConfirmEmailInvalid"
-            >
-              <template v-slot:error>
-                <p v-if="!isOkConfirmEmailRequired">
-                  * Confirmar email é obrigatorio.
-                </p>
-                <p v-else-if="!isOkConfirmEmailSameAsEmail">
-                  * Emails informados não conferem.
                 </p>
               </template>
             </q-input>
@@ -275,20 +260,18 @@ import {
   alpha,
   helpers,
 } from 'vuelidate/lib/validators';
-import types from '../../../store/types';
-import dateUtils from '../../../shared/utils/date';
-import Genre from '../../../shared/enums/genre';
+import types from '../../../../store/types';
+import dateUtils from '../../../../shared/utils/date';
+import Genre from '../../../../shared/enums/genre';
 
 export default {
   data() {
     return {
       options: [
-        '',
         Genre.FEMININO,
         Genre.MASCULINO,
       ],
       dateUtils,
-      confirmEmail: '',
       user: {
         firstName: '',
         lastName: '',
@@ -327,7 +310,7 @@ export default {
     },
     continue() {
       this.setUser(this.user);
-      this.$router.push('/register/password');
+      this.$router.push('/account/register/password');
     },
   },
   computed: {
@@ -397,6 +380,9 @@ export default {
     isOkBirthDateMaxValue() {
       return this.$v.user.birthDate.maxValue;
     },
+    isOkGenreRequired() {
+      return this.$v.user.genre.required;
+    },
     isOkEmailRequired() {
       return this.$v.user.email.required;
     },
@@ -405,12 +391,6 @@ export default {
     },
     isOkEmailUnique() {
       return this.$v.user.email.unique;
-    },
-    isOkConfirmEmailRequired() {
-      return this.$v.confirmEmail.required;
-    },
-    isOkConfirmEmailSameAsEmail() {
-      return this.$v.confirmEmail.sameAsEmail;
     },
     isOkPhoneNumberRequired() {
       return this.$v.user.phoneNumber.required;
@@ -458,7 +438,9 @@ export default {
           return value < new Date().toLocaleString();
         },
       },
-      genre: {},
+      genre: {
+        required,
+      },
       email: {
         required,
         email,
@@ -488,12 +470,6 @@ export default {
         length(value) {
           return !value || this.checkLength(value, 2);
         },
-      },
-    },
-    confirmEmail: {
-      required,
-      sameAsEmail(value) {
-        return value && value === this.user.email;
       },
     },
   },

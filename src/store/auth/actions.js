@@ -12,4 +12,20 @@ export default {
     Vue.cookie.delete('token');
     Vue.cookie.delete('user');
   },
+  [types.actions.LOAD_AUTHORIZED_USER]: async ({ commit, state }) => {
+    const axios = Vue.prototype.$axios;
+    if (!state.user) {
+      const userApiPath = Vue.cookie.get('user');
+      if (userApiPath) {
+        await axios
+          .get(userApiPath)
+          .then((response) => {
+            commit(types.mutations.SET_USER, response.data);
+            return response.data;
+          });
+      } else {
+        Vue.router.push('/account/login');
+      }
+    }
+  },
 };

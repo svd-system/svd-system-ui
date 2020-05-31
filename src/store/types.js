@@ -3,14 +3,15 @@ const REGISTRATION = 'registration';
 const AUTHORIZATION = 'auth';
 
 // Getters
-const GET_USER = `${REGISTRATION}/GET_USER`;
+const GET_USER = 'GET_USER';
 
 // Mutations
-const SET_USER = `${REGISTRATION}/SET_USER`;
+const SET_USER = 'SET_USER';
 
 // Actions
 const STORE_CREDENTIALS = 'STORE_CREDENTIALS';
 const CLEAR_CREDENTIALS = 'CLEAR_CREDENTIALS';
+const LOAD_AUTHORIZED_USER = 'LOAD_AUTHORIZED_USER';
 
 const types = {
   namespaces: {
@@ -26,6 +27,7 @@ const types = {
   actions: {
     STORE_CREDENTIALS,
     CLEAR_CREDENTIALS,
+    LOAD_AUTHORIZED_USER,
   },
 };
 

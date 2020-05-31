@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-drawer show-if-above :width="250" elevated content-class="text-white">
+    <q-drawer v-if="user" show-if-above :width="250" elevated content-class="text-white">
       <div class="col">
         <div class="col q-ma-lg">
           <q-avatar
@@ -26,7 +26,7 @@
           :key="index"
         >
           <q-item
-            v-if="isEqualsUserRole(link.role)"
+            v-if="isEqualsUserRole(link.roles)"
             :clickable="!isActiveLink(link.href)"
             v-ripple
             :active="isActiveLink(link.href)"
@@ -42,27 +42,36 @@
         </q-list>
       </div>
     </q-drawer>
-    <router-view></router-view>
+    <transition name="slide" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 import types from '../../store/types';
 
 export default {
   data() {
     return {
-      user: {},
       links: [
         {
           href: '/user/vaccines',
           label: 'CADASTRO DE VACINAS',
-          role: 'ADMINISTRADOR',
+          roles: ['ADMINISTRADOR'],
+        },
+        {
+          href: '/user/patients',
+          label: 'PACIENTES',
+          roles: ['ADMINISTRADOR', 'COLABORADOR'],
         },
       ],
     };
   },
   computed: {
+    ...mapGetters(types.namespaces.AUTHORIZATION, {
+      user: types.getters.GET_USER,
+    }),
     activeLinkHref() {
       return this.$route.path;
     },
@@ -71,32 +80,24 @@ export default {
     ...mapActions(types.namespaces.AUTHORIZATION, {
       clearCredentials: types.actions.CLEAR_CREDENTIALS,
     }),
+    ...mapMutations(types.namespaces.AUTHORIZATION, {
+      setAuthorizedUser: types.mutations.SET_USER,
+    }),
     goToPath(link) {
       this.$router.push(link);
     },
     isActiveLink(href) {
-      return this.activeLinkHref === href;
+      return this.activeLinkHref.startsWith(href);
     },
-    isEqualsUserRole(role) {
-      return this.user.role === role;
+    isEqualsUserRole(roles) {
+      return roles.includes(this.user.role);
     },
   },
-  created() {
-    const userHref = this.$cookie.get('user');
-    const token = this.$cookie.get('token');
-
-    this.$axios.get(userHref, {
-      headers: {
-        Authorization: token,
-      },
-    })
-      .then((user) => {
-        this.user = { ...user.data };
-      })
-      .catch(() => {
-        this.$router.push('/login');
-        this.clearCredentials();
-      });
+  mounted() {
+    const link = this.links.find((el) => this.isEqualsUserRole(el.roles));
+    if (link) {
+      this.goToPath(link.href);
+    }
   },
 };
 </script>
