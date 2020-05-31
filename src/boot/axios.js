@@ -16,7 +16,7 @@ export default ({ Vue }) => {
         Vue.cookie.delete('auth');
         Vue.cookie.delete('token');
         Vue.cookie.delete('user');
-        Vue.router.push('/account/login');
+        window.location.reload();
       }
     });
 
