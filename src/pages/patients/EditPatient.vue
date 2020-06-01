@@ -63,12 +63,6 @@
                 :error="isBirthDateInvalid"
               >
                 <template v-slot:error>
-                  <p v-if="!isOkBirthDateRequired">
-                    * Data de nascimento é obrigatorio.
-                  </p>
-                  <p v-else-if="!isOkBirthDateMaxValue">
-                    * Datas futuras não são permitidas.
-                  </p>
                 </template>
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
@@ -399,12 +393,7 @@ export default {
         required,
       },
       cpf: {},
-      birthDate: {
-        required,
-        maxValue(value) {
-          return value < new Date().toLocaleString();
-        },
-      },
+      birthDate: {},
       genre: {
         required,
       },
