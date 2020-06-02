@@ -435,7 +435,26 @@ export default {
       birthDate: {
         required,
         maxValue(value) {
-          return value < new Date().toLocaleString();
+          if (value) {
+            const fields = [...value.split('/')];
+            const birthDate = new Date();
+            birthDate.setDate(fields[0]);
+            birthDate.setMonth(fields[1] - 1);
+            birthDate.setYear(fields[2]);
+            birthDate.setHours(0);
+            birthDate.setMinutes(0);
+            birthDate.setSeconds(0);
+            birthDate.setMilliseconds(0);
+
+            const today = new Date();
+            today.setHours(0);
+            today.setMinutes(0);
+            today.setSeconds(0);
+            today.setMilliseconds(0);
+            return birthDate <= today;
+          }
+
+          return false;
         },
       },
       genre: {
