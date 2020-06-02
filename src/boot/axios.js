@@ -17,6 +17,8 @@ export default ({ Vue }) => {
         Vue.cookie.delete('token');
         Vue.cookie.delete('user');
         window.location.reload();
+      } else {
+        throw error;
       }
     });
 
