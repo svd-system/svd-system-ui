@@ -7,11 +7,11 @@ import UserDataRegistrationForm from '../pages/account/registration/forms/UserDa
 import PasswordRegistrationForm from '../pages/account/registration/forms/Password';
 import Homepage from '../pages/home/Homepage';
 import Vaccines from '../pages/vaccine/Vaccines';
-import Welcome from '../pages/home/Welcome';
 import Patients from '../pages/patients/Patients';
 import EditPatient from '../pages/patients/EditPatient';
 import PatientRecord from '../pages/patients/PatientRecord';
 import AccountIndex from '../pages/account/Index';
+import UserVaccinations from '../pages/vaccinations/UserVaccinations';
 
 import store from '../store';
 import types from '../store/types';
@@ -22,7 +22,7 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: 'user',
+        path: 'site',
         component: Index,
         children: [
           {
@@ -42,8 +42,8 @@ const routes = [
             },
             children: [
               {
-                path: '',
-                component: Welcome,
+                path: 'vaccinations',
+                component: UserVaccinations,
               },
               {
                 path: 'vaccines',

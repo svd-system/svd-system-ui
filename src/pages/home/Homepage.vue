@@ -56,12 +56,17 @@ export default {
     return {
       links: [
         {
-          href: '/user/vaccines',
+          href: '/site/vaccinations',
+          label: 'MEU HISTÓRICO',
+          roles: ['ADMINISTRADOR', 'COLABORADOR', 'PACIENTE'],
+        },
+        {
+          href: '/site/vaccines',
           label: 'CADASTRO DE VACINAS',
           roles: ['ADMINISTRADOR'],
         },
         {
-          href: '/user/patients',
+          href: '/site/patients',
           label: 'PACIENTES',
           roles: ['ADMINISTRADOR', 'COLABORADOR'],
         },
