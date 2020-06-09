@@ -32,6 +32,7 @@
               <q-btn
                 color="accent"
                 label="Criar registro"
+                @click="createVaccination"
               />
             </div>
             <div class="row wrap q-gutter-sm">
@@ -175,6 +176,9 @@ export default {
         .then((response) => {
           this.vaccinations = response.data;
         });
+    },
+    createVaccination() {
+      this.$router.push(`/site/patients/${this.patient.id}/new`);
     },
   },
   mounted() {

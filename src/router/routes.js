@@ -12,6 +12,7 @@ import EditPatient from '../pages/patients/EditPatient';
 import PatientRecord from '../pages/patients/PatientRecord';
 import AccountIndex from '../pages/account/Index';
 import UserVaccinations from '../pages/vaccinations/UserVaccinations';
+import CreateVaccination from '../pages/vaccinations/CreateVaccination';
 
 import store from '../store';
 import types from '../store/types';
@@ -60,6 +61,10 @@ const routes = [
               {
                 path: 'patients/:id/edit',
                 component: EditPatient,
+              },
+              {
+                path: 'patients/:id/new',
+                component: CreateVaccination,
               },
             ],
           },
