@@ -68,7 +68,7 @@ const routes = [
       {
         path: 'account',
         component: AccountIndex,
-        redirect: 'user',
+        redirect: 'site',
         children: [
           {
             path: 'login',

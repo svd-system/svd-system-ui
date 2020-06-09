@@ -2,7 +2,7 @@
   <div v-if="patient">
     <q-card class="q-pa-lg min">
       <q-card-section class="q-gutter-sm">
-        <router-link class="text-primary" to="/user/patients" tag="a">
+        <router-link class="text-primary" to="/site/patients" tag="a">
           Voltar
         </router-link>
       </q-card-section>

@@ -169,10 +169,10 @@ export default {
       return this.user && roles.includes(this.user.role);
     },
     goToPatient(patientId) {
-      this.$router.push(`/user/patients/${patientId}`);
+      this.$router.push(`/site/patients/${patientId}`);
     },
     edit(patientId) {
-      this.$router.push(`/user/patients/${patientId}/edit`);
+      this.$router.push(`/site/patients/${patientId}/edit`);
     },
   },
   mounted() {
