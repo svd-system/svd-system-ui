@@ -6,7 +6,9 @@ import Registration from '../pages/account/registration/Registration';
 import UserDataRegistrationForm from '../pages/account/registration/forms/UserData';
 import PasswordRegistrationForm from '../pages/account/registration/forms/Password';
 import Homepage from '../pages/home/Homepage';
-import Vaccines from '../pages/vaccine/Vaccines';
+import VaccineList from '../pages/vaccine/VaccineList';
+import VaccineData from '../pages/vaccine/VaccineData';
+import VaccineEdit from '../pages/vaccine/VaccineEdit';
 import Patients from '../pages/patients/Patients';
 import EditPatient from '../pages/patients/EditPatient';
 import PatientRecord from '../pages/patients/PatientRecord';
@@ -48,7 +50,15 @@ const routes = [
               },
               {
                 path: 'vaccines',
-                component: Vaccines,
+                component: VaccineList,
+              },
+              {
+                path: 'vaccines/new',
+                component: VaccineData,
+              },
+              {
+                path: 'vaccines/:id/edit',
+                component: VaccineEdit,
               },
               {
                 path: 'patients',
