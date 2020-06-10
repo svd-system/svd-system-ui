@@ -62,7 +62,7 @@ export default {
         },
         {
           href: '/site/vaccines',
-          label: 'CADASTRO DE VACINAS',
+          label: 'VACINAS',
           roles: ['ADMINISTRADOR'],
         },
         {
