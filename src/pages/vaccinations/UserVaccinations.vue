@@ -1,25 +1,10 @@
 <template>
   <div>
-    <q-card class="q-px-xl q-py-lg min">
-      <q-card-section class="q-py-xs">
-        <div class="row">
-          <router-link class="col text-primary" to="/site/patients" tag="a">
-            Voltar
-          </router-link>
-          <p class="col self-end text-right">
-            <span class="svd-title"
-              >{{ patient.firstName }} {{ patient.lastName }}</span
-            >
-            <br />
-            <span>{{ patient.cpf | cpf }}</span>
-          </p>
-        </div>
-        <hr />
-      </q-card-section>
+    <q-card class="q-pa-xl min">
       <q-card-section>
         <q-form class="row justify-center">
           <div class="col col-12 q-col-gutter-sm">
-            <div class="row wrap q-gutter-xs">
+            <div class="row wrap q-gutter-lg">
               <q-input
                 class="col"
                 outlined
@@ -29,15 +14,10 @@
                 v-model="search.query"
                 @keyup="findAllVaccinations"
               />
-              <q-btn
-                color="accent"
-                label="Criar registro"
-                @click="createVaccination"
-              />
             </div>
             <div class="row wrap q-gutter-sm">
               <q-input
-                class="col col-xs-4 col-lg-3"
+                class="col col-xs-5 col-lg-4"
                 outlined
                 label="De"
                 stack-label
@@ -62,7 +42,7 @@
                 </template>
               </q-input>
               <q-input
-                class="col col-xs-4 col-lg-3"
+                class="col col-xs-5 col-lg-4"
                 outlined
                 label="Até"
                 stack-label
@@ -133,7 +113,6 @@ export default {
   data() {
     return {
       dateUtils,
-      patient: null,
       search: {
         query: '',
         from: '',
@@ -149,7 +128,7 @@ export default {
   },
   methods: {
     findAllVaccinations() {
-      let url = `/api/users/${this.patient.id}/vaccinations?`;
+      let url = `/api/users/${this.user.id}/vaccinations?`;
       if (this.search.query) {
         url += `q=${this.search.query}&`;
       }
@@ -170,22 +149,13 @@ export default {
       this.findAllVaccinations();
       qDateProxy.hide();
     },
-    loadVaccinations() {
-      this.$axios
-        .get(`/api/users/${this.patient.id}/vaccinations`)
-        .then((response) => {
-          this.vaccinations = response.data;
-        });
-    },
-    createVaccination() {
-      this.$router.push(`/site/patients/${this.patient.id}/new`);
-    },
   },
   mounted() {
-    this.$axios.get(`/api/users/${this.$route.params.id}`).then((response) => {
-      this.patient = response.data;
-      this.loadVaccinations();
-    });
+    this.$axios
+      .get(`/api/users/${this.user.id}/vaccinations`)
+      .then((response) => {
+        this.vaccinations = response.data;
+      });
   },
 };
 </script>
