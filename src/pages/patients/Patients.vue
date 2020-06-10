@@ -44,7 +44,7 @@
           <template v-slot:body="props">
             <q-tr :props="props" @click="goToPatient(props.row.id)">
               <q-td key="cpf" :props="props">
-                {{ props.row.cpf }}
+                {{ props.row.cpf | cpf }}
               </q-td>
               <q-td key="name" :props="props">
                 {{ props.row.firstName }} {{ props.row.lastName }}

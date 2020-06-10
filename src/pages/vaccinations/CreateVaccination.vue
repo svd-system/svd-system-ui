@@ -11,7 +11,7 @@
               >{{ patient.firstName }} {{ patient.lastName }}</span
             >
             <br />
-            <span>{{ patient.cpf }}</span>
+            <span>{{ patient.cpf | cpf }}</span>
           </p>
         </div>
         <hr />
