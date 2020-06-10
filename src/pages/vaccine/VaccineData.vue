@@ -27,6 +27,9 @@
                     <p v-if="!isOkSerialNumberRequired">
                       * Numero de série obrigatorio.
                     </p>
+                    <p v-if="!isOkSerialNumberUnique">
+                      * Numero de série já está em uso.
+                    </p>
                   </template>
                 </q-input>
                 <q-input
@@ -128,6 +131,9 @@ export default {
     isOkSerialNumberRequired() {
       return this.$v.vaccine.serialNumber.required;
     },
+    isOkSerialNumberUnique() {
+      return this.$v.vaccine.serialNumber.unique;
+    },
     isOkDefaultQuantityNumeric() {
       return this.$v.vaccine.defaultQuantity.numeric;
     },
@@ -163,6 +169,12 @@ export default {
     vaccine: {
       serialNumber: {
         required,
+        unique(value) {
+          return this.$axios
+            .get(`/api/vaccines/count?serialNumber=${value}`)
+            .then((response) => response.data.count <= 0)
+            .catch(() => false);
+        },
       },
       label: {
         required,
