@@ -8,6 +8,7 @@ import PasswordRegistrationForm from '../pages/account/registration/forms/Passwo
 import Homepage from '../pages/home/Homepage';
 import VaccineList from '../pages/vaccine/VaccineList';
 import VaccineData from '../pages/vaccine/VaccineData';
+import VaccineEdit from '../pages/vaccine/VaccineEdit';
 import Patients from '../pages/patients/Patients';
 import EditPatient from '../pages/patients/EditPatient';
 import PatientRecord from '../pages/patients/PatientRecord';
@@ -54,6 +55,10 @@ const routes = [
               {
                 path: 'vaccines/new',
                 component: VaccineData,
+              },
+              {
+                path: 'vaccines/:id/edit',
+                component: VaccineEdit,
               },
               {
                 path: 'patients',

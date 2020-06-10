@@ -41,7 +41,7 @@
               </q-tr>
             </template>
             <template v-slot:body="props">
-              <q-tr v-if="hasVaccinesToShow" :props="props" @click="goToVaccine(props.row.id)">
+              <q-tr v-if="hasVaccinesToShow" :props="props">
                 <q-td key="id" :props="props">
                   {{ props.row.serialNumber }}
                 </q-td>
@@ -134,9 +134,6 @@ export default {
     },
     update(vaccine) {
       this.$axios.put(`/api/vaccines/${vaccine.id}`, vaccine);
-    },
-    goToVaccine(vaccineId) {
-      this.$router.push(`/site/vaccines/${vaccineId}`);
     },
     edit(vaccineId) {
       this.$router.push(`/site/vaccines/${vaccineId}/edit`);

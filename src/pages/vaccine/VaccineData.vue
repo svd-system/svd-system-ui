@@ -27,7 +27,7 @@
                     <p v-if="!isOkSerialNumberRequired">
                       * Numero de série obrigatorio.
                     </p>
-                    <p v-if="!isOkSerialNumberUnique">
+                    <p v-else-if="!isOkSerialNumberUnique">
                       * Numero de série já está em uso.
                     </p>
                   </template>
@@ -86,7 +86,7 @@
             Infelizmente não foi possivel cadastrar a vacina!
           </p>
         </alert-error>
-        <alert-success ref="alertSuccess" @onClickOK="goToLogin">
+        <alert-success ref="alertSuccess" @onClickOK="goToList">
           <p slot="title">Sucesso!</p>
           <p slot="message">
             O cadastro da vacina foi realizado!
@@ -143,9 +143,6 @@ export default {
   },
   methods: {
     create() {
-      this.vaccine.defaultQuantity = this.vaccine.defaultQuantity
-        ? this.vaccine.defaultQuantity
-        : null;
       this.$axios
         .post('/api/vaccines', {
           serialNumber: this.vaccine.serialNumber,
@@ -161,7 +158,7 @@ export default {
           this.$refs.alertError.open();
         });
     },
-    goToLogin() {
+    goToList() {
       this.$router.push('/site/vaccines');
     },
   },
