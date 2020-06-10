@@ -101,10 +101,40 @@
           color="accent"
           label="Confirmar"
           :disable="isVaccinationInvalid"
-          @click="this.confirm"
+          @click="openConfirmDialog"
         />
       </q-card-actions>
     </q-card>
+    <!-- CONFIRMAR CADASTRO -->
+    <q-dialog v-model="showDialog">
+      <q-card class="card-container">
+        <q-card-section>
+          <div class="text-h6 text-dark">
+            Confirmar vacinação
+          </div>
+          <hr />
+        </q-card-section>
+        <q-card-section v-if="!isVaccinationInvalid" class="q-pt-none">
+          <div class="row q-ma-5">
+            <p class="text-dark">
+              Confirma os dados informados abaixo?
+              <br />
+              <span class="svd-title"
+                >Vacina: {{ vaccination.vaccine.label }}
+                {{ vaccination.quantity }}ml</span
+              >
+            </p>
+            <p>
+              Uma vez confirmado o registro não pode ser excluído ou editado.
+            </p>
+          </div>
+        </q-card-section>
+        <q-card-actions class="q-pa-md" align="right">
+          <q-btn label="Voltar" color="negative" @click="closeConfirmDialog" />
+          <q-btn label="Confirmar vacinação" color="positive" @click="confirm" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -126,6 +156,8 @@ export default {
       dateUtils,
       patient: null,
       vaccineOptions: [],
+      showDialog: false,
+      password: '',
     };
   },
   computed: {
@@ -145,7 +177,7 @@ export default {
       return this.user ? `${this.user.firstName} ${this.user.lastName}` : '';
     },
     isVaccinationInvalid() {
-      return this.$v.$invalid;
+      return this.$v.vaccination.$invalid;
     },
     isVaccineInvalid() {
       return this.$v.vaccination.vaccine.$invalid;
@@ -159,6 +191,9 @@ export default {
     isProviderInvalid() {
       return this.$v.vaccination.provider.$invalid;
     },
+    isPasswordInvalid() {
+      return this.$v.password.$invalid;
+    },
     isOkVaccineRequired() {
       return this.$v.vaccination.vaccine.required;
     },
@@ -167,6 +202,9 @@ export default {
     },
     isOkNumericRequired() {
       return this.$v.vaccination.quantity.numeric;
+    },
+    isOkPasswordRequired() {
+      return this.$v.password.required;
     },
   },
   methods: {
@@ -207,15 +245,25 @@ export default {
         });
       });
     },
+    openConfirmDialog() {
+      this.showDialog = true;
+    },
+    closeConfirmDialog() {
+      this.showDialog = false;
+    },
     confirm() {
-      console.log('vaccination', {
-        vaccineId: this.vaccination.vaccine.id,
-        patientId: this.patient.id,
-        providerId: this.user.id,
-        quantity: this.vaccination.quantity,
-        createdAt: this.vaccination.createdAt,
-        comments: this.vaccination.comments,
-      });
+      this.$axios
+        .post('/api/vaccinations', {
+          vaccineId: this.vaccination.vaccine.id,
+          patientId: this.patient.id,
+          providerId: this.user.id,
+          quantity: this.vaccination.quantity,
+          createdAt: this.vaccination.createdAt,
+          comments: this.vaccination.comments,
+        })
+        .then(() => {
+          this.$router.push(`/site/patients/${this.patient.id}`);
+        });
     },
   },
   mounted() {
@@ -234,6 +282,9 @@ export default {
       },
       createdAt: {},
       provider: {},
+    },
+    password: {
+      required,
     },
   },
 };
