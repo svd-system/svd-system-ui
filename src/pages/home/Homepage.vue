@@ -61,6 +61,11 @@ export default {
           roles: ['ADMINISTRADOR', 'COLABORADOR', 'PACIENTE'],
         },
         {
+          href: '/site/newsfeed',
+          label: 'MURAL',
+          roles: ['ADMINISTRADOR', 'COLABORADOR', 'PACIENTE'],
+        },
+        {
           href: '/site/vaccines',
           label: 'VACINAS',
           roles: ['ADMINISTRADOR'],

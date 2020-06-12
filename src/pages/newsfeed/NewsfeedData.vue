@@ -3,8 +3,8 @@
     <q-card class="q-pa-xl min">
       <q-card-section>
     <q-card-section class="q-pt-none q-gutter-sm">
-      <router-link class="text-primary" to="/user/newsfeedList" tag="a">
-        voltar para o mural
+      <router-link class="text-primary" to="/site/newsfeed" tag="a">
+        Voltar
       </router-link>
       <p class="text-h6 text-dark text-center svd-title">
         Adicionar nova notícia no mural

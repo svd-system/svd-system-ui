@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     criarPostagem() {
-      this.$router.push('/user/newsfeed/new');
+      this.$router.push('/site/newsfeed/new');
     },
     edit(newsfeedid) {
       this.$router.push(`${newsfeedid}`);
