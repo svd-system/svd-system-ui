@@ -1,66 +1,74 @@
 <template>
   <div>
-    <q-card class="q-pa-xl min">
+    <q-card class="q-py-lg min">
       <q-card-section>
         <q-card-section class="q-pt-none q-gutter-sm">
           <router-link class="text-primary" to="/site/newsfeed" tag="a">
             Voltar
           </router-link>
           <p class="text-h6 text-dark text-center svd-title">
-            Adicionar nova notícia no mural
+            Criar post
           </p>
         </q-card-section>
-        <q-form class="row justify-center">
-          <div class="col col-10 q-col-gutter-sm">
-            <div class="corpo">
-              <label class="col col-xs-12 col-md-10"
-                >Titulo
-                <q-input outlined :dense="true" v-model="newsfeed.title">
-                </q-input>
-              </label>
+        <q-card-section class="row justify-center">
+          <q-form class="col col-10 q-col-gutter-sm">
+            <div class="row wrap">
+              <q-input
+                class="col"
+                outlined
+                label="Titulo"
+                stack-label
+                :dense="true"
+                v-model="newsfeed.title"
+              />
             </div>
-          </div>
-        </q-form>
-        <q-form class="row justify-center">
-          <div class="col col-10 q-col-gutter-sm">
-            <div class="corpo">
-              <label class="col col-xs-12 col-md-10"
-                >Descrição
-                <q-input outlined :dense="true" v-model="newsfeed.description">
-                </q-input>
-              </label>
+            <div class="row wrap">
+              <q-input
+                class="col"
+                outlined
+                label="Descrição"
+                type="textarea"
+                stack-label
+                :dense="true"
+                v-model="newsfeed.description"
+              />
             </div>
-          </div>
-        </q-form>
-        <q-form class="row justify-center">
-          <div class="col col-10 q-col-gutter-sm">
-            <div class="corpo">
-              <label class="col col-xs-12 col-md-10"
-                >Link
-                <q-input outlined :dense="true" v-model="newsfeed.link">
-                </q-input>
-              </label>
+            <div class="row wrap">
+              <q-input
+                class="col"
+                outlined
+                label="Link"
+                stack-label
+                :dense="true"
+                v-model="newsfeed.link"
+              />
             </div>
-          </div>
-        </q-form>
-        <q-form class="row justify-left">
-          <div class="col col-5 q-col-gutter-sm">
-            <div class="data-experacao">
-              <label class="col col-xs-2 col-md-10"
-                >Data de expiração
-                <q-input
-                  outlined
-                  :dense="true"
-                  type="date"
-                  :locale="dateUtils.LOCALE"
-                  v-model="newsfeed.expiresAt"
-                />
-              </label>
+            <div class="row wrap">
+              <q-input
+                class="col col-5"
+                outlined
+                label="Data de expiração"
+                stack-label
+                :dense="true"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        :mask="dateUtils.MASK"
+                        v-model="newsfeed.expiresAt"
+                        :locale="dateUtils.LOCALE"
+                        @input="() => $refs.qDateProxy.hide()"
+                      />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
-          </div>
-        </q-form>
-        <q-form class="row justify-left">
-          <div class="col col-10 q-col-gutter-sm">
             <div class="check-box">
               <q-checkbox
                 label="Exibir ícone de notificação?"
@@ -69,9 +77,9 @@
                 v-model="newsfeed.showIcon"
               />
             </div>
-          </div>
-        </q-form>
-        <div class="btnCadastrar row justify-center">
+          </q-form>
+        </q-card-section>
+        <div class="q-my-lg row justify-center">
           <q-btn label="Criar" class="q-mt-md" color="teal" @click="create">
             <template v-slot:loading>
               <q-spinner-facebook />
@@ -148,30 +156,3 @@ export default {
   },
 };
 </script>
-<style>
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter,
-.slide-fade-leave-to {
-  transform: translateX(10px);
-  opacity: 0;
-}
-
-.btnCadastrar {
-  margin-top: 40px;
-}
-
-.data-experacao {
-  margin-top: 12px;
-  margin-left: 55px;
-}
-
-.check-box {
-  margin-top: 10px;
-  margin-left: 55px;
-}
-</style>
