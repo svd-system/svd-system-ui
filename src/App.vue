@@ -38,7 +38,7 @@ export default {
     logout() {
       this.clearCredentials();
       this.setUser(null);
-      this.$router.push('login');
+      this.$router.push('/account/login');
     },
   },
 };
