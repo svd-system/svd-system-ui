@@ -32,6 +32,7 @@
                 :options="vaccineOptions"
                 :error="isVaccineInvalid"
                 @filter="listVaccines"
+                @input="changeQuantity"
                 style="max-width: 350px"
               >
                 <template v-slot:error>
@@ -264,6 +265,11 @@ export default {
         .then(() => {
           this.$router.push(`/site/patients/${this.patient.id}`);
         });
+    },
+    changeQuantity() {
+      if (this.vaccination.vaccine && this.vaccination.vaccine.defaultQuantity) {
+        this.vaccination.quantity = this.vaccination.vaccine.defaultQuantity;
+      }
     },
   },
   mounted() {
